@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nick Kontonicolaou | Portfolio</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        background: #87ceeb;
+        overflow: hidden;
+        font-family: 'Courier New', monospace;
+      }
+
+      #canvas-container {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+      }
+
+      /* Invisible tall div to capture scroll events */
+      #scroll-capture {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        overflow-y: scroll;
+        z-index: 5;
+        pointer-events: auto;
+      }
+      #scroll-capture::-webkit-scrollbar { display: none; }
+      #scroll-inner { height: 900vh; width: 1px; }
+
+      /* HUD layer */
+      #hud {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      /* Title */
+      #name-plate {
+        position: absolute;
+        top: 36px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        transition: opacity 0.8s ease;
+      }
+
+      #name-plate h1 {
+        font-size: clamp(1.2rem, 2.5vw, 2rem);
+        color: #1a2a3a;
+        text-shadow: 0 2px 12px rgba(255,255,255,0.7);
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        font-weight: 400;
+      }
+
+      #name-plate p {
+        font-size: clamp(0.65rem, 1.2vw, 0.8rem);
+        color: #2a4a6a;
+        letter-spacing: 6px;
+        margin-top: 8px;
+        text-transform: uppercase;
+      }
+
+      /* Scroll hint */
+      #scroll-hint {
+        position: absolute;
+        bottom: 36px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        transition: opacity 0.6s ease;
+      }
+
+      #scroll-hint span {
+        display: block;
+        color: #1a3a5a;
+        font-size: 0.7rem;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        animation: pulse 2.2s ease-in-out infinite;
+      }
+
+      #scroll-hint .arr {
+        font-size: 1.1rem;
+        margin-top: 8px;
+        animation: bob 1.6s ease-in-out infinite;
+      }
+
+      @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+      @keyframes bob   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
+
+      /* Project info card */
+      #project-card {
+        position: absolute;
+        bottom: 48px;
+        left: 50%;
+        transform: translateX(-50%) translateY(16px);
+        width: min(460px, 88vw);
+        background: rgba(255, 252, 245, 0.93);
+        border: 1px solid rgba(60, 100, 150, 0.2);
+        border-radius: 3px;
+        padding: 26px 30px;
+        opacity: 0;
+        transition: opacity 0.35s ease, transform 0.35s ease;
+        pointer-events: none;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      }
+
+      #project-card.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+        pointer-events: all;
+      }
+
+      #project-card .label {
+        font-size: 0.6rem;
+        letter-spacing: 6px;
+        color: #4a7aaa;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      #project-card h2 {
+        font-size: 1.25rem;
+        color: #1a2a3a;
+        font-weight: 400;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+      }
+
+      #project-card .badge {
+        display: inline-block;
+        font-size: 0.6rem;
+        letter-spacing: 4px;
+        color: #2a7a4a;
+        border: 1px solid #2a7a4a;
+        padding: 2px 10px;
+        border-radius: 2px;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+
+      #project-card p {
+        font-size: 0.82rem;
+        color: #3a5a70;
+        line-height: 1.75;
+        margin-bottom: 20px;
+      }
+
+      #project-card a {
+        display: inline-block;
+        font-size: 0.65rem;
+        letter-spacing: 4px;
+        color: #1a2a3a;
+        text-decoration: none;
+        border: 1px solid rgba(30,60,100,0.4);
+        padding: 9px 20px;
+        text-transform: uppercase;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      #project-card a:hover {
+        background: rgba(30,60,100,0.08);
+        border-color: rgba(30,60,100,0.8);
+      }
+
+      /* Side progress dots */
+      #dots {
+        position: absolute;
+        right: 28px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      #dots.show { opacity: 1; }
+
+      .dot {
+        width: 5px; height: 5px;
+        border-radius: 50%;
+        background: rgba(30,80,140,0.3);
+        transition: all 0.3s ease;
+        cursor: default;
+      }
+
+      .dot.active {
+        background: #1a4a8a;
+        box-shadow: 0 0 8px rgba(30,74,138,0.5);
+        transform: scale(1.5);
+      }
+
+      /* Street name / subtitle */
+      #street-label {
+        position: absolute;
+        top: 50%;
+        left: 28px;
+        transform: translateY(-50%);
+        font-size: 0.58rem;
+        color: rgba(20,60,110,0.5);
+        letter-spacing: 4px;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        text-transform: uppercase;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        user-select: none;
+      }
+
+      #street-label.show { opacity: 1; }
+
+      /* Vignette */
+      #vignette {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 6;
+        background: radial-gradient(ellipse at center, transparent 55%, rgba(100,160,210,0.25) 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas-container"></div>
+    <div id="vignette"></div>
+
+    <!-- Captures scroll without showing a scrollbar on the canvas -->
+    <div id="scroll-capture">
+      <div id="scroll-inner"></div>
+    </div>
+
+    <div id="hud">
+      <div id="name-plate">
+        <h1>Nickolaos &lsquo;Nick&rsquo; Kontonicolaou</h1>
+        <p>Junior CS &nbsp;&#8226;&nbsp; CCNY</p>
+      </div>
+
+      <div id="scroll-hint">
+        <span>Scroll to explore</span>
+        <span class="arr">&#8595;</span>
+      </div>
+
+      <div id="project-card">
+        <div class="label">&#9632; Project</div>
+        <h2 id="card-title"></h2>
+        <div class="badge" id="card-tech"></div>
+        <p id="card-desc"></p>
+        <a id="card-link" href="#" target="_blank" rel="noopener noreferrer">View on GitHub &rarr;</a>
+      </div>
+
+      <div id="dots"></div>
+      <div id="street-label">Dev St. &mdash; Portfolio Row</div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
