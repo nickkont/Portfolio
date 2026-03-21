@@ -1,55 +1,53 @@
 import * as THREE from 'three';
-import { gsap } from 'gsap';
 
 // ─── Projects data ───────────────────────────────────────────────────────────
+/** @typedef {{ label: string, href: string }} ProjectLink */
+/** @type {Array<{ title: string, tech: string, desc: string, color: number, links?: ProjectLink[], wip?: boolean }>} */
 const PROJECTS = [
   {
-    title: 'ShellSort Visualizer',
-    tech: 'Python',
-    desc: 'An interactive visualizer that animates the Shell Sort algorithm step-by-step, letting you watch gap sequences collapse as the array approaches sorted order.',
-    github: 'https://github.com/NickKontonicolaou',
-    color: 0x3a7bd5,
-    signColor: 0x3a7bd5,
+    title: 'Kindred',
+    tech: 'Cross-platform · In progress',
+    desc: 'A period tracking app built for iOS and Android—thoughtful, private, and easy to use. Currently in active development.',
+    wip: true,
+    links: [],
+    color: 0xc45c7a,
   },
   {
-    title: 'Campus Navigator',
-    tech: 'Java · Android',
-    desc: 'An Android app that helps CCNY students navigate campus buildings, find open classrooms, and check real-time shuttle locations using GPS.',
-    github: 'https://github.com/NickKontonicolaou',
-    color: 0xe85d5d,
-    signColor: 0xe85d5d,
+    title: 'CheckMate',
+    tech: 'Swift · iOS',
+    desc: 'Split the bill down to the cent—including tax and tip. Snap receipts, assign items, save checks, and share totals (including Venmo requests).',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/nickkont/CheckMate' },
+      { label: 'App Store', href: 'https://apps.apple.com/us/app/checkmate-check-splitting/id6742667685' },
+    ],
+    color: 0x2e7d8a,
   },
   {
-    title: 'CLI Task Manager',
-    tech: 'C',
-    desc: 'A lightweight command-line task manager written in C with persistent storage via binary files, priority queues, and deadline-based sorting.',
-    github: 'https://github.com/NickKontonicolaou',
-    color: 0x6aaa6a,
-    signColor: 0x6aaa6a,
+    title: 'Kingdom World',
+    tech: 'Swift · iOS · iPad',
+    desc: 'A fast side-scrolling action game: dodge, fight, collect coins, unlock weapons and cosmetics, and fill your bestiary as you save the kingdom.',
+    links: [
+      { label: 'App Store', href: 'https://apps.apple.com/us/app/kingdom-world/id6752544752' },
+    ],
+    color: 0x8b4513,
   },
   {
-    title: 'Data Structures Library',
-    tech: 'C++',
-    desc: 'A header-only library implementing AVL trees, skip lists, hash maps with open addressing, and a graph with Dijkstra — built from scratch as a learning exercise.',
-    github: 'https://github.com/NickKontonicolaou',
-    color: 0xd4a017,
-    signColor: 0xd4a017,
+    title: 'Eventra',
+    tech: 'Web · Team project',
+    desc: 'An event-contract marketplace (think Kalshi-style) for trading on future outcomes—sports, politics, and campus-specific markets—with live data and community features.',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/nickkont/csc47300-s2026-team-10minutetimer' },
+    ],
+    color: 0x5c6bc0,
   },
   {
-    title: 'Weather Dashboard',
-    tech: 'JavaScript · HTML/CSS',
-    desc: 'A responsive weather dashboard pulling from the OpenWeatherMap API with animated weather icons, 5-day forecasts, and geolocation support.',
-    github: 'https://github.com/NickKontonicolaou',
-    color: 0x9b59b6,
-    signColor: 0x9b59b6,
-  },
-  {
-    title: 'Mini Unix Shell',
-    tech: 'C · Systems',
-    desc: 'A POSIX-compliant mini shell supporting piping, I/O redirection, background jobs, and signal handling — built to understand how bash works under the hood.',
-    github: 'https://github.com/NickKontonicolaou',
-    color: 0xe67e22,
-    signColor: 0xe67e22,
+    title: 'TrueBite',
+    tech: 'React · Flask · Firebase · AI',
+    desc: 'AI-enabled restaurant ordering: role-based dashboards, real-time orders and delivery, forums, wallets—and a RAG chatbot (local menu embeddings + Gemini) with voice menu search.',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/bshiribaiev/TrueBite' },
+    ],
+    color: 0xd84315,
   },
 ];
 
@@ -58,11 +56,20 @@ const container = document.getElementById('canvas-container');
 const W = window.innerWidth;
 const H = window.innerHeight;
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+/** Cap DPR — full Retina resolution doubles fragment cost for minimal visual gain here. */
+function getEffectivePixelRatio() {
+  return Math.min(window.devicePixelRatio || 1, 1.5);
+}
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: false,
+  powerPreference: 'high-performance',
+  stencil: false,
+});
+renderer.setPixelRatio(getEffectivePixelRatio());
 renderer.setSize(W, H);
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.shadowMap.type = THREE.PCFShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.3;
 container.appendChild(renderer.domElement);
@@ -84,7 +91,7 @@ scene.add(ambientLight);
 const sunLight = new THREE.DirectionalLight(0xfff5e0, 4.0);
 sunLight.position.set(20, 30, -10);
 sunLight.castShadow = true;
-sunLight.shadow.mapSize.set(2048, 2048);
+sunLight.shadow.mapSize.set(1024, 1024);
 sunLight.shadow.camera.near = 0.5;
 sunLight.shadow.camera.far = 120;
 sunLight.shadow.camera.left = -30;
@@ -439,12 +446,15 @@ for (const lp of lampPositions.filter((_, i) => i % 2 === 0)) {
 }
 
 // ─── Project stores (shop facades) ───────────────────────────────────────────
-const STORE_SPACING = 9;
+// Each project needs a unique Z. Pairs used to share Z (same "row"), so getNearestStore
+// always picked the first of the pair—CheckMate & Eventra never showed.
+const FIRST_STORE_Z = -10;
+const STORE_Z_STEP = 5; // distance along the street between consecutive storefronts
 const storeObjects = []; // { mesh, project, side, zPos, signMesh }
 
 function makeStore(project, index) {
   const side = index % 2 === 0 ? -1 : 1; // left or right
-  const z = -Math.floor(index / 2) * STORE_SPACING - 10;
+  const z = FIRST_STORE_Z - index * STORE_Z_STEP;
   const xBase = side * 7.2;
 
   const group = new THREE.Group();
@@ -607,7 +617,7 @@ function makeStore(project, index) {
 PROJECTS.forEach((proj, i) => makeStore(proj, i));
 
 // ─── Particles (city ambience) ────────────────────────────────────────────────
-const particleCount = 320;
+const particleCount = 140;
 const positions = new Float32Array(particleCount * 3);
 for (let i = 0; i < particleCount; i++) {
   positions[i * 3 + 0] = (Math.random() - 0.5) * 30;
@@ -628,8 +638,9 @@ scene.add(new THREE.Points(particleGeo, particleMat));
 const scrollEl = document.getElementById('scroll-capture');
 let scrollProgress = 0; // 0..1
 
-// Total walkable Z distance
-const WALK_END_Z = -(PROJECTS.length / 2) * STORE_SPACING - 6;
+// Total walkable Z — end a few units past the last storefront so TrueBite still highlights
+const LAST_STORE_Z = FIRST_STORE_Z - (PROJECTS.length - 1) * STORE_Z_STEP;
+const WALK_END_Z = LAST_STORE_Z - 4;
 const CAM_START_Z = 0;
 const CAM_END_Z = WALK_END_Z;
 
@@ -637,11 +648,15 @@ const CAM_END_Z = WALK_END_Z;
 const camTarget = { z: CAM_START_Z, y: 1.7 };
 const camActual = { z: CAM_START_Z, y: 1.7 };
 
-scrollEl.addEventListener('scroll', () => {
-  const max = scrollEl.scrollHeight - scrollEl.clientHeight;
-  scrollProgress = scrollEl.scrollTop / max;
-  camTarget.z = CAM_START_Z + scrollProgress * (CAM_END_Z - CAM_START_Z);
-});
+scrollEl.addEventListener(
+  'scroll',
+  () => {
+    const max = scrollEl.scrollHeight - scrollEl.clientHeight;
+    scrollProgress = max > 0 ? scrollEl.scrollTop / max : 0;
+    camTarget.z = CAM_START_Z + scrollProgress * (CAM_END_Z - CAM_START_Z);
+  },
+  { passive: true },
+);
 
 // ─── UI refs ──────────────────────────────────────────────────────────────────
 const namePlate    = document.getElementById('name-plate');
@@ -650,7 +665,7 @@ const projectCard  = document.getElementById('project-card');
 const cardTitle    = document.getElementById('card-title');
 const cardTech     = document.getElementById('card-tech');
 const cardDesc     = document.getElementById('card-desc');
-const cardLink     = document.getElementById('card-link');
+const cardLinksEl  = document.getElementById('card-links');
 const dotsEl       = document.getElementById('dots');
 const streetLabel  = document.getElementById('street-label');
 
@@ -676,7 +691,23 @@ function setActiveProject(index) {
     cardTitle.textContent = proj.title;
     cardTech.textContent  = proj.tech;
     cardDesc.textContent  = proj.desc;
-    cardLink.href         = proj.github;
+    cardLinksEl.innerHTML = '';
+    const links = proj.links && proj.links.length ? proj.links : [];
+    if (links.length) {
+      for (const { label, href } of links) {
+        const a = document.createElement('a');
+        a.href = href;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        a.textContent = `${label} →`;
+        cardLinksEl.appendChild(a);
+      }
+    } else if (proj.wip) {
+      const span = document.createElement('span');
+      span.className = 'card-wip';
+      span.textContent = 'In development — links coming soon';
+      cardLinksEl.appendChild(span);
+    }
     projectCard.classList.add('show');
   } else {
     projectCard.classList.remove('show');
@@ -690,22 +721,71 @@ function getNearestStore(camZ) {
 
   storeObjects.forEach(({ zPos }, i) => {
     const dist = Math.abs(camZ - zPos);
-    if (dist < 5 && dist < minDist) {
+    // Prefer strictly closer; on tie (midpoint between two stores), prefer later index
+    if (dist < minDist - 1e-6) {
       minDist = dist;
+      closest = i;
+    } else if (Math.abs(dist - minDist) < 1e-6 && i > closest) {
       closest = i;
     }
   });
 
+  if (minDist > 5) return -1;
   return closest;
 }
 
+// ─── Resume modal — pause WebGL while PDF is open (iframe + PDF are GPU-heavy) ─
+const RESUME_PDF_URL = '/Nickolaos-Kontonicolaou_Resume.pdf#view=FitH';
+const resumeModal = document.getElementById('resume-modal');
+const resumeIframe = document.getElementById('resume-iframe');
+const resumeOpenBtn = document.getElementById('resume-open');
+const resumeCloseBtn = document.getElementById('resume-close');
+const resumeBackdrop = document.getElementById('resume-backdrop');
+
+let sceneRenderEnabled = true;
+
+function updateSceneRenderState() {
+  sceneRenderEnabled = !resumeModal.classList.contains('is-open') && !document.hidden;
+}
+
+function openResumeModal() {
+  resumeModal.classList.add('is-open');
+  resumeModal.setAttribute('aria-hidden', 'false');
+  resumeIframe.src = RESUME_PDF_URL;
+  scrollEl.style.overflow = 'hidden';
+  updateSceneRenderState();
+}
+
+function closeResumeModal() {
+  resumeModal.classList.remove('is-open');
+  resumeModal.setAttribute('aria-hidden', 'true');
+  resumeIframe.src = 'about:blank';
+  scrollEl.style.overflow = '';
+  updateSceneRenderState();
+}
+
+resumeOpenBtn.addEventListener('click', openResumeModal);
+resumeCloseBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeResumeModal();
+});
+resumeBackdrop.addEventListener('click', closeResumeModal);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && resumeModal.classList.contains('is-open')) {
+    closeResumeModal();
+  }
+});
+
+document.addEventListener('visibilitychange', updateSceneRenderState);
+
 // ─── Animation loop ───────────────────────────────────────────────────────────
-const clock = new THREE.Clock();
 let frame = 0;
 
 function animate() {
   requestAnimationFrame(animate);
-  const delta = clock.getDelta();
+  if (!sceneRenderEnabled) return;
+
   frame++;
 
   // Smooth camera movement
@@ -725,13 +805,15 @@ function animate() {
     glowLight.intensity = 0.5 + Math.sin(frame * 0.02 + i) * 0.15;
   });
 
-  // Animate particles (slow drift)
-  const pos = particleGeo.attributes.position;
-  for (let i = 0; i < particleCount; i++) {
-    pos.array[i * 3 + 1] -= 0.002;
-    if (pos.array[i * 3 + 1] < 0) pos.array[i * 3 + 1] = 12;
+  // Particles: update every other frame (half the CPU work, same drift speed)
+  if ((frame & 1) === 0) {
+    const pos = particleGeo.attributes.position;
+    for (let i = 0; i < particleCount; i++) {
+      pos.array[i * 3 + 1] -= 0.004;
+      if (pos.array[i * 3 + 1] < 0) pos.array[i * 3 + 1] = 12;
+    }
+    pos.needsUpdate = true;
   }
-  pos.needsUpdate = true;
 
   // UI updates
   const scrolled = scrollProgress > 0.02;
@@ -755,5 +837,6 @@ window.addEventListener('resize', () => {
   const w = window.innerWidth, h = window.innerHeight;
   camera.aspect = w / h;
   camera.updateProjectionMatrix();
+  renderer.setPixelRatio(getEffectivePixelRatio());
   renderer.setSize(w, h);
 });
