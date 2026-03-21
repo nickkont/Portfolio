@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
 
 // ─── Projects data ───────────────────────────────────────────────────────────
 /** @typedef {{ label: string, href: string }} ProjectLink */
@@ -414,30 +416,34 @@ for (let i = 0; i < 9; i++) {
 }
 
 function makeLampPost(x, z) {
-  // pole
+  const armLen = 1.2;
+  const headR = 0.18;
+  // Left sidewalk (x < 0): arm extends +X toward street; right: -X toward street
+  const towardStreet = x < 0 ? 1 : -1;
+
   const poleGeo = new THREE.CylinderGeometry(0.04, 0.06, 5, 6);
   const poleMat = new THREE.MeshStandardMaterial({ color: 0x7a8a9a, roughness: 0.6, metalness: 0.5 });
   const pole = new THREE.Mesh(poleGeo, poleMat);
   pole.position.set(x, 2.5, z);
   scene.add(pole);
 
-  // arm
-  const armGeo = new THREE.CylinderGeometry(0.03, 0.03, 1.2, 6);
+  // Arm: horizontal along X, centered between pole and tip
+  const armGeo = new THREE.CylinderGeometry(0.03, 0.03, armLen, 6);
   const arm = new THREE.Mesh(armGeo, poleMat);
   arm.rotation.z = Math.PI / 2;
-  const armDir = x < 0 ? 0.5 : -0.5;
-  arm.position.set(x + armDir * 0.5, 4.9, z);
+  const armCenterX = x + towardStreet * (armLen / 2);
+  arm.position.set(armCenterX, 4.9, z);
   scene.add(arm);
 
-  // lamp head
-  const headGeo = new THREE.SphereGeometry(0.18, 8, 8);
+  // Globe at the far end of the arm (past pole), sitting on the tip
+  const headGeo = new THREE.SphereGeometry(headR, 8, 8);
   const headMat = new THREE.MeshStandardMaterial({
     color: 0xdde8ee,
     roughness: 0.3,
     metalness: 0.6,
   });
   const head = new THREE.Mesh(headGeo, headMat);
-  head.position.set(x + armDir, 4.9, z);
+  head.position.set(x + towardStreet * (armLen + headR * 0.35), 4.9, z);
   scene.add(head);
 }
 
@@ -452,7 +458,47 @@ const FIRST_STORE_Z = -10;
 const STORE_Z_STEP = 5; // distance along the street between consecutive storefronts
 const storeObjects = []; // { mesh, project, side, zPos, signMesh }
 
-function makeStore(project, index) {
+/** Keep 3D sign within storefront width (~5 units); trim + ellipsis if needed. */
+function shortenStorefrontTitle(title, maxChars = 14) {
+  const t = title.trim();
+  if (t.length <= maxChars) return t;
+  return `${t.slice(0, Math.max(3, maxChars - 1)).trim()}…`;
+}
+
+function makeStorefrontLabelMesh(project, font) {
+  const text = shortenStorefrontTitle(project.title);
+  const geo = new TextGeometry(text, {
+    font,
+    size: 0.23,
+    depth: 0.04,
+    curveSegments: 8,
+    bevelEnabled: true,
+    bevelThickness: 0.006,
+    bevelSize: 0.005,
+    bevelSegments: 1,
+  });
+  geo.computeBoundingBox();
+  geo.center();
+  const bb = geo.boundingBox;
+  const w = bb.max.x - bb.min.x;
+  const maxW = 4.1;
+  const scale = w > maxW ? maxW / w : 1;
+
+  const mat = new THREE.MeshStandardMaterial({
+    color: project.color,
+    emissive: project.color,
+    emissiveIntensity: 0.12,
+    roughness: 0.55,
+    metalness: 0.25,
+  });
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.scale.setScalar(scale);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  return mesh;
+}
+
+function makeStore(project, index, font) {
   const side = index % 2 === 0 ? -1 : 1; // left or right
   const z = FIRST_STORE_Z - index * STORE_Z_STEP;
   const xBase = side * 7.2;
@@ -486,6 +532,10 @@ function makeStore(project, index) {
   body.receiveShadow = true;
   group.add(body);
 
+  // Front face toward the camera (both sidewalks): depth 4 → near face at z + 2. Do not use `side`
+  // here — left stores had side=-1 and were placed on z - 2 (facing down the road).
+  const frontZ = z + 2.01;
+
   // Facade (front face) — slightly lighter plaster over brick
   const facadeTex = makeConcreteTexture(storeWall.wall);
   facadeTex.repeat.set(2, 1.2);
@@ -496,8 +546,8 @@ function makeStore(project, index) {
     roughness: 0.75,
   });
   const facade = new THREE.Mesh(facadeGeo, facadeMat);
-  facade.position.set(xBase, 3, z + side * 2.01);
-  facade.rotation.y = side > 0 ? Math.PI : 0;
+  facade.position.set(xBase, 3, frontZ);
+  facade.rotation.y = 0;
   group.add(facade);
 
   // Dark corner trim on storefront edges — visually separates it
@@ -523,44 +573,44 @@ function makeStore(project, index) {
   group.add(parapet);
 
   // Awning
-  const awningGeo = new THREE.BoxGeometry(5.4, 0.15, 1.4);
+  const awningGeo = new THREE.BoxGeometry(5.0, 0.15, 1.4);
   const awningColor = new THREE.Color(project.color).multiplyScalar(0.6);
   const awningMat = new THREE.MeshStandardMaterial({ color: awningColor, roughness: 0.7 });
   const awning = new THREE.Mesh(awningGeo, awningMat);
-  awning.position.set(xBase, 4.0, z + side * 2.7);
+  awning.position.set(xBase, 4.0, z + 2.7);
   awning.castShadow = true;
   group.add(awning);
 
   // Stripe on awning
-  const stripeGeo = new THREE.BoxGeometry(5.4, 0.02, 1.4);
+  const stripeGeo = new THREE.BoxGeometry(5.0, 0.02, 1.4);
   const stripeMat = new THREE.MeshStandardMaterial({
     color: project.color,
     emissive: project.color,
     emissiveIntensity: 0.4,
   });
   const stripe = new THREE.Mesh(stripeGeo, stripeMat);
-  stripe.position.set(xBase, 4.08, z + side * 2.7);
+  stripe.position.set(xBase, 4.08, z + 2.7);
   group.add(stripe);
 
   // Door
   const doorGeo = new THREE.BoxGeometry(0.9, 2.2, 0.08);
   const doorMat = new THREE.MeshStandardMaterial({ color: 0x5c4a3a, roughness: 0.6 });
   const door = new THREE.Mesh(doorGeo, doorMat);
-  door.position.set(xBase, 1.1, z + side * 2.06);
+  door.position.set(xBase, 1.1, z + 2.06);
   group.add(door);
 
   // Door frame
   const dfGeo = new THREE.BoxGeometry(1.05, 2.35, 0.06);
   const dfMat = new THREE.MeshStandardMaterial({ color: project.color, roughness: 0.5, metalness: 0.3 });
   const df = new THREE.Mesh(dfGeo, dfMat);
-  df.position.set(xBase, 1.175, z + side * 2.04);
+  df.position.set(xBase, 1.175, z + 2.04);
   group.add(df);
 
   // Display windows — opaque canvas tinted pane inside a colored frame
   const storeWinTex = makeWindowTex('#0a1520', '#' + project.color.toString(16).padStart(6, '0'));
+  const faceZ = z + 2.03;
   for (let w = 0; w < 2; w++) {
     const wx = xBase + (w === 0 ? -1.4 : 1.4);
-    const faceZ = z + side * 2.03;
 
     // Colored window frame (slightly proud of facade)
     const frameGeo = new THREE.BoxGeometry(1.18, 1.48, 0.06);
@@ -570,7 +620,7 @@ function makeStore(project, index) {
       metalness: 0.2,
     });
     const frame = new THREE.Mesh(frameGeo, frameMat);
-    frame.position.set(wx, 2.0, faceZ - side * 0.01);
+    frame.position.set(wx, 2.0, faceZ - 0.01);
     group.add(frame);
 
     // Opaque tinted-glass pane (canvas painted)
@@ -581,40 +631,33 @@ function makeStore(project, index) {
       metalness: 0.15,
     });
     const win = new THREE.Mesh(winGeo, winMat);
-    win.position.set(wx, 2.0, faceZ + side * 0.035);
-    win.rotation.y = side > 0 ? Math.PI : 0;
+    win.position.set(wx, 2.0, faceZ + 0.035);
+    win.rotation.y = 0;
     group.add(win);
 
     // Window sill
     const sillGeo = new THREE.BoxGeometry(1.22, 0.08, 0.18);
     const sillMat = new THREE.MeshStandardMaterial({ color: 0x6a6058, roughness: 0.7 });
     const sill = new THREE.Mesh(sillGeo, sillMat);
-    sill.position.set(wx, 1.26, z + side * 2.12);
+    sill.position.set(wx, 1.26, z + 2.12);
     group.add(sill);
   }
 
-  // Hanging sign above door
-  const signGeo = new THREE.BoxGeometry(3.2, 0.65, 0.08);
-  const signMat = new THREE.MeshStandardMaterial({
-    color: project.color,
-    emissive: project.color,
-    emissiveIntensity: 0.5,
-    roughness: 0.4,
-    metalness: 0.2,
-  });
-  const sign = new THREE.Mesh(signGeo, signMat);
-  sign.position.set(xBase, 3.5, z + side * 2.1);
+  // 3D extruded name above awning (toward camera / +Z face)
+  const sign = makeStorefrontLabelMesh(project, font);
+  sign.position.set(xBase, 4.62, z + 2.14);
   group.add(sign);
 
   // Glow light under awning
   const glowLight = new THREE.PointLight(project.color, 0.3, 6, 2);
-  glowLight.position.set(xBase, 3.8, z + side * 3.2);
+  glowLight.position.set(xBase, 3.8, z + 3.2);
   scene.add(glowLight);
 
   storeObjects.push({ group, project, side, zPos: z, sign, glowLight });
 }
 
-PROJECTS.forEach((proj, i) => makeStore(proj, i));
+const storefrontFont = await new FontLoader().loadAsync('/fonts/helvetiker_regular.typeface.json');
+PROJECTS.forEach((proj, i) => makeStore(proj, i, storefrontFont));
 
 // ─── Particles (city ambience) ────────────────────────────────────────────────
 const particleCount = 140;
