@@ -691,12 +691,19 @@ const CAM_END_Z = WALK_END_Z;
 const camTarget = { z: CAM_START_Z, y: 1.7 };
 const camActual = { z: CAM_START_Z, y: 1.7 };
 
+const contactCard = document.getElementById('contact-card');
+
 scrollEl.addEventListener(
   'scroll',
   () => {
     const max = scrollEl.scrollHeight - scrollEl.clientHeight;
     scrollProgress = max > 0 ? scrollEl.scrollTop / max : 0;
     camTarget.z = CAM_START_Z + scrollProgress * (CAM_END_Z - CAM_START_Z);
+
+    // Fade out connect card once user starts scrolling
+    const scrolled = scrollProgress > 0.03;
+    contactCard.style.opacity = scrolled ? '0' : '1';
+    contactCard.style.pointerEvents = scrolled ? 'none' : 'auto';
   },
   { passive: true },
 );
@@ -758,22 +765,26 @@ function setActiveProject(index) {
 }
 
 // ─── Determine which store is closest to camera ───────────────────────────────
+// Directional window: show card 12 units before reaching a store, hide 3 units after passing.
+// camZ - zPos > 0 → camera approaching; < 0 → camera has passed.
+const CARD_LEAD  = 9; // units ahead of store to show card
+const CARD_TRAIL =  3; // units past store before hiding card
+
 function getNearestStore(camZ) {
   let closest = -1;
-  let minDist = Infinity;
+  let bestLead = -Infinity;
 
   storeObjects.forEach(({ zPos }, i) => {
-    const dist = Math.abs(camZ - zPos);
-    // Prefer strictly closer; on tie (midpoint between two stores), prefer later index
-    if (dist < minDist - 1e-6) {
-      minDist = dist;
-      closest = i;
-    } else if (Math.abs(dist - minDist) < 1e-6 && i > closest) {
-      closest = i;
+    const lead = camZ - zPos; // positive = approaching, negative = passed
+    if (lead >= -CARD_TRAIL && lead <= CARD_LEAD) {
+      // Within the directional window — pick the one whose store is closest ahead
+      if (lead > bestLead) {
+        bestLead = lead;
+        closest = i;
+      }
     }
   });
 
-  if (minDist > 5) return -1;
   return closest;
 }
 

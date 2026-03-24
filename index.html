@@ -65,6 +65,14 @@
         letter-spacing: 6px;
         margin-top: 8px;
         text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      @media (max-width: 600px) {
+        #name-plate p {
+          letter-spacing: 2px;
+          font-size: 0.6rem;
+        }
       }
 
       /* Scroll hint */
@@ -250,6 +258,7 @@
         backdrop-filter: blur(6px);
         -webkit-backdrop-filter: blur(6px);
         box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        transition: opacity 0.4s ease;
       }
 
       #contact-card .label {
