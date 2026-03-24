@@ -15,6 +15,15 @@ const PROJECTS = [
     color: 0xc45c7a,
   },
   {
+    title: 'Lead Agent',
+    tech: 'Python · CLI · Web',
+    desc: 'An AI-powered CLI tool that automates B2B lead generation — scrapes, qualifies, and enriches company prospects using LLMs, then exports ready-to-use lead lists for outreach.',
+    links: [
+      { label: 'GitHub', href: 'https://github.com/nickkont/Lead-Agent' },
+    ],
+    color: 0x8b4513,
+  },
+  {
     title: 'CheckMate',
     tech: 'Swift · iOS',
     desc: 'Split the bill down to the cent—including tax and tip. Snap receipts, assign items, save checks, and share totals (including Venmo requests).',
