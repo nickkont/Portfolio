@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout *)",
+      "Bash(git pull *)",
+      "WebFetch(domain:startscaler.com)",
+      "PowerShell(Remove-Item -Recurse -Force \"c:\\\\Users\\\\USER\\\\Desktop\\\\Portfolio\\\\Portfolio\" -Confirm:$false)"
+    ]
+  }
+}

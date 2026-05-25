@@ -15,11 +15,11 @@ const PROJECTS = [
     color: 0xc45c7a,
   },
   {
-    title: 'Lead Agent',
-    tech: 'Python · CLI · Web',
-    desc: 'An AI-powered CLI tool that automates B2B lead generation — scrapes, qualifies, and enriches company prospects using LLMs, then exports ready-to-use lead lists for outreach.',
+    title: 'StartScaler',
+    tech: 'Python · OpenAI · Claude API · Web',
+    desc: 'AI-powered lead generation platform for founders and small teams. Input a company URL and 3 existing customers — get verified, ranked leads with personalized outreach emails in 10 minutes. Uses OpenAI embeddings + pgvector to build ICPs across 275M+ companies, intent scoring via funding and hiring signals, and the Claude API to generate trigger-based emails.',
     links: [
-      { label: 'GitHub', href: 'https://github.com/nickkont/Lead-Agent' },
+      { label: 'StartScaler', href: 'https://startscaler.com' },
     ],
     color: 0x8b4513,
   },
