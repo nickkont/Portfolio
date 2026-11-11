@@ -237,6 +237,7 @@ html { scrollbar-color: var(--stone) var(--bg); }
 }
 .ph__label { font-size: 0.85rem; color: var(--muted); background: var(--paper); padding: 6px 12px; border-radius: 99px; }
 .ph--portrait { aspect-ratio: 4 / 5; }
+.hero__photo { width: 100%; height: auto; object-fit: cover; object-position: 50% 20%; background: var(--surface); }
 .ph--card { aspect-ratio: 4 / 3; border-radius: var(--radius); }
 .ph--tall { aspect-ratio: 3 / 4; }
 
@@ -546,3 +547,9 @@ html { scrollbar-color: var(--stone) var(--bg); }
   .hood { transform: none !important; filter: none !important; }
   .statement__text .w { color: var(--ink); }
 }
+
+/* contact: social links row */
+.socials { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.direct .link { color: #fff; }
+.direct li > a { justify-self: start; }
+.footer__cols a:hover { color: var(--gold); }

@@ -26,8 +26,7 @@
     <!--
       Structured data: this is what search engines and AI assistants read to
       learn who Nick is, where he works and what he does.
-      TODO when ready: add "telephone", "email", "image" (headshot URL),
-      "address" (office), and real profile URLs to "sameAs".
+      Keep phone, email, address and profile links here in sync with the page.
     -->
     <script type="application/ld+json">
       {
@@ -40,9 +39,25 @@
             "alternateName": ["Nick Kontonicolaou", "Nick Kont", "Nickolaos Kontonicolaou"],
             "jobTitle": "Licensed Real Estate Salesperson",
             "worksFor": { "@id": "https://nickkont.com/#brokerage" },
+            "knowsLanguage": ["English", "Greek", "Ukrainian", "Russian"],
             "knowsAbout": ["Astoria real estate", "Ditmars apartments", "Queens rentals", "NYC rentals", "NYC home buying", "Brooklyn and Manhattan apartments", "Co-ops and condos in Queens", "Landlord leasing"],
             "url": "https://nickkont.com/",
-            "sameAs": []
+            "image": "https://nickkont.com/img/nick-headshot.jpg",
+            "telephone": "+1-718-791-6703",
+            "email": "nick@modernspaces.com",
+            "hasCredential": {
+              "@type": "EducationalOccupationalCredential",
+              "credentialCategory": "license",
+              "name": "New York State Real Estate Salesperson License",
+              "identifier": "10401406914",
+              "recognizedBy": { "@type": "GovernmentOrganization", "name": "New York Department of State" }
+            },
+            "sameAs": [
+              "https://modernspaces.com/agent/nickolaos-kontonicolaou-dits",
+              "https://www.instagram.com/nick_._k/",
+              "https://www.linkedin.com/in/nickolaos-kontonicolaou-3267bb2a9/",
+              "https://www.google.com/search?kgmid=/g/11z_fl48sk"
+            ]
           },
           {
             "@type": "RealEstateAgent",
@@ -52,6 +67,21 @@
             "url": "https://nickkont.com/",
             "founder": { "@id": "https://nickkont.com/#nick" },
             "parentOrganization": { "@id": "https://nickkont.com/#brokerage" },
+            "image": "https://nickkont.com/img/nick-headshot.jpg",
+            "telephone": "+1-718-791-6703",
+            "email": "nick@modernspaces.com",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "29-20 23rd Ave",
+              "addressLocality": "Astoria",
+              "addressRegion": "NY",
+              "postalCode": "11105",
+              "addressCountry": "US"
+            },
+            "sameAs": [
+              "https://modernspaces.com/agent/nickolaos-kontonicolaou-dits",
+              "https://www.google.com/search?kgmid=/g/11z_fl48sk"
+            ],
             "areaServed": [
               { "@type": "Place", "name": "Astoria, Queens, NY" },
               { "@type": "Place", "name": "Ditmars-Steinway, Queens, NY" },
@@ -70,7 +100,7 @@
             "@type": "Organization",
             "@id": "https://nickkont.com/#brokerage",
             "name": "Modern Spaces",
-            "url": "https://www.modernspacesnyc.com/"
+            "url": "https://modernspaces.com/"
           },
           {
             "@type": "WebSite",
@@ -85,6 +115,11 @@
                 "@type": "Question",
                 "name": "Who is a good real estate agent for Astoria and Ditmars?",
                 "acceptedAnswer": { "@type": "Answer", "text": "Nick Kontonicolaou is a licensed real estate agent with Modern Spaces based in Astoria and Ditmars, Queens. He knows Ditmars-Steinway, central Astoria, Astoria Heights, Long Island City and Sunnyside block by block, and works with renters, buyers, sellers and landlords across all of New York City." }
+              },
+              {
+                "@type": "Question",
+                "name": "Is there a Greek-, Ukrainian- or Russian-speaking real estate agent in Astoria?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Yes. Nick Kontonicolaou of Modern Spaces, based in Astoria, speaks English, Greek, Ukrainian and Russian, and works with clients in all four languages across New York City." }
               },
               {
                 "@type": "Question",
@@ -157,7 +192,7 @@
             <p class="hero__lede" style="--i:3">
               I'm Nick Kontonicolaou, a licensed agent with Modern Spaces. Astoria and Ditmars are home, and I help
               people rent, buy and sell everywhere from Queens to Brooklyn to Manhattan.
-              <span class="todo">[TODO: one line on why you, e.g. lived here X years]</span>
+              Born and raised in New York City, I know a spot (or two).
             </p>
             <div class="hero__actions" style="--i:4">
               <a class="btn btn--solid" href="#contact" data-magnetic>Book a call <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
@@ -166,15 +201,12 @@
             <p class="hero__meta" style="--i:5">
               <span>Modern Spaces</span>
               <span aria-hidden="true">·</span>
-              <span>NYS Licensed Salesperson <span class="todo">[TODO: license #]</span></span>
+              <span>NYS Licensed Salesperson #10401406914</span>
             </p>
           </div>
 
           <figure class="hero__portrait">
-            <!-- TODO: replace with headshot: <img src="/img/nick-headshot.jpg" alt="Nick Kontonicolaou, real estate agent in Astoria"> -->
-            <div class="ph ph--portrait" role="img" aria-label="Headshot placeholder">
-              <span class="ph__label">[TODO: headshot]</span>
-            </div>
+            <img class="ph ph--portrait hero__photo" src="/img/nick-headshot.jpg" alt="Nick Kontonicolaou, real estate agent with Modern Spaces, based in Astoria, Queens" width="1200" height="1500" fetchpriority="high" />
             <div class="hero__badge" aria-hidden="true">
               <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#circ">BASED IN ASTORIA · ALL OF NYC · </textPath></text></svg>
               <span>NYC</span>
@@ -195,13 +227,14 @@
             <p class="lede" data-reveal>
               My full name is Nickolaos Kontonicolaou-Dits, but everyone calls me Nick. I'm an agent with Modern Spaces. I live in Astoria, and I work with clients all over New York City.
             </p>
-            <p data-reveal><span class="todo">[TODO: your story: how long in Astoria, why real estate, what clients can expect]</span></p>
+            <p data-reveal>Finding a home is one of the biggest decisions you'll ever make, and it should feel exciting, not overwhelming. My job is to make it simple: honest advice, quick answers and someone in your corner from the first tour to the day you get the keys.</p>
+            <p data-reveal>Helping people land somewhere they love is my favorite part of this work. I speak English, Greek, Ukrainian and Russian, so you can talk it through in the language you're most comfortable with.</p>
             <ul class="chips" data-reveal>
               <li>Modern Spaces</li>
               <li>Based in Astoria</li>
               <li>All five boroughs</li>
-              <li class="todo">[TODO: languages]</li>
-              <li class="todo">[TODO: years in Astoria]</li>
+              <li>English · Ελληνικά · Українська · Русский</li>
+              <li>Born &amp; raised in NYC</li>
             </ul>
             <p class="about__side" data-reveal><a class="link" href="#contact">Get in touch</a></p>
           </div>
@@ -403,7 +436,7 @@
               <li class="card"><div class="ph ph--card"><span class="ph__label">[TODO: photo]</span></div><div class="card__meta"><h3>[TODO: address]</h3><p>LIC · [beds] bd · [baths] ba</p><p class="card__price">$[TODO]/mo</p></div></li>
               <li class="card"><div class="ph ph--card"><span class="ph__label">[TODO: photo]</span></div><div class="card__meta"><h3>[TODO: address]</h3><p>Astoria Heights · [beds] bd · [baths] ba</p><p class="card__price">$[TODO]</p></div></li>
               <li class="card"><div class="ph ph--card"><span class="ph__label">[TODO: photo]</span></div><div class="card__meta"><h3>[TODO: address]</h3><p>Sunnyside · [beds] bd · [baths] ba</p><p class="card__price">$[TODO]</p></div></li>
-              <li class="card card--more"><a href="https://www.modernspacesnyc.com/" target="_blank" rel="noopener">All Modern Spaces listings <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></a></li>
+              <li class="card card--more"><a href="https://modernspaces.com/agent/nickolaos-kontonicolaou-dits" target="_blank" rel="noopener">My listings on Modern Spaces <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></a></li>
             </ul>
           </div>
         </div>
@@ -441,6 +474,10 @@
               <div class="qa__a"><div><p>I'm Nick Kontonicolaou, a licensed agent with Modern Spaces, based in Astoria and Ditmars. I know these neighborhoods block by block, and I work with renters, buyers, sellers and landlords across all of New York City. <span class="todo">[TODO: add a concrete proof point]</span></p></div></div>
             </div>
             <div class="qa">
+              <h3><button type="button" aria-expanded="false">Do you speak Greek, Ukrainian or Russian?<i aria-hidden="true"></i></button></h3>
+              <div class="qa__a"><div><p>Yes. I speak English, Greek, Ukrainian and Russian, and I'm happy to work with you in whichever you prefer, from the first call to the lease or contract.</p></div></div>
+            </div>
+            <div class="qa">
               <h3><button type="button" aria-expanded="false">Do you only work in Astoria?<i aria-hidden="true"></i></button></h3>
               <div class="qa__a"><div><p>No. Astoria and Ditmars are home base, but I work with clients anywhere in New York City: Queens, Brooklyn, Manhattan, the Bronx and Staten Island.</p></div></div>
             </div>
@@ -475,10 +512,15 @@
             <h2 id="contact-h" class="contact__title" data-reveal="mask"><span>Let's find your</span><span><em>next place.</em></span></h2>
             <p class="lede" data-reveal>Tell me what you're looking for and I'll get back to you the same day.</p>
             <ul class="direct" data-reveal>
-              <li><span>Phone</span><a href="tel:" class="todo">[TODO: phone]</a></li>
-              <li><span>Email</span><a href="mailto:" class="todo">[TODO: email]</a></li>
-              <li><span>Instagram</span><a href="#" class="todo">[TODO: @handle]</a></li>
-              <li><span>Office</span><span class="todo">[TODO: Modern Spaces office address]</span></li>
+              <li><span>Phone</span><a class="link" href="tel:+17187916703">(718) 791-6703</a></li>
+              <li><span>Email</span><a class="link" href="mailto:nick@modernspaces.com">nick@modernspaces.com</a></li>
+              <li><span>Office</span><a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=29-20+23rd+Ave+Astoria+NY+11105" target="_blank" rel="noopener">29-20 23rd Ave, Astoria, NY 11105</a></li>
+              <li><span>Elsewhere</span><span class="socials">
+                <a class="link" href="https://www.instagram.com/nick_._k/" target="_blank" rel="noopener">Instagram</a>
+                <a class="link" href="https://www.linkedin.com/in/nickolaos-kontonicolaou-3267bb2a9/" target="_blank" rel="noopener">LinkedIn</a>
+                <a class="link" href="https://share.google/y4Zmit0NmqmpGjjEf" target="_blank" rel="noopener">Google</a>
+                <a class="link" href="https://modernspaces.com/agent/nickolaos-kontonicolaou-dits" target="_blank" rel="noopener">Modern Spaces</a>
+              </span></li>
             </ul>
           </div>
 
@@ -509,14 +551,18 @@
           <div>
             <p><strong>Nickolaos Kontonicolaou-Dits</strong></p>
             <p>Licensed Real Estate Salesperson, Modern Spaces</p>
-            <p>NYS License <span class="todo">[TODO]</span></p>
+            <p>NYS License #10401406914</p>
+            <p>29-20 23rd Ave, Astoria, NY 11105</p>
+            <p><a href="tel:+17187916703">(718) 791-6703</a> · <a href="mailto:nick@modernspaces.com">nick@modernspaces.com</a></p>
           </div>
           <div>
             <p>Based in Astoria and Ditmars, Queens. Serving Queens, Brooklyn, Manhattan, the Bronx and Staten Island.</p>
           </div>
           <nav aria-label="Footer">
-            <a href="#" class="todo">[TODO: NY Fair Housing Notice link (from Modern Spaces compliance)]</a>
-            <a href="#" class="todo">[TODO: Standard Operating Procedures]</a>
+            <a href="https://d1e1jt2fj4r8r.cloudfront.net/documents/fairhousingnotice.pdf" target="_blank" rel="noopener">NY Fair Housing Notice</a>
+            <a href="https://d1e1jt2fj4r8r.cloudfront.net/ace6ac86-1388-42d9-b3b0-93492fac2222/0c1abff5-700b-4adc-a103-9836de7c47e0/sop.pdf" target="_blank" rel="noopener">Standard Operating Procedures</a>
+            <a href="https://www.instagram.com/nick_._k/" target="_blank" rel="noopener">Instagram</a>
+            <a href="https://www.linkedin.com/in/nickolaos-kontonicolaou-3267bb2a9/" target="_blank" rel="noopener">LinkedIn</a>
           </nav>
         </div>
         <div class="footer__end">
