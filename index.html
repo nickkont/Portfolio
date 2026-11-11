@@ -3,462 +3,475 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nick Kontonicolaou | Portfolio</title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
+    <title>Nick Kontonicolaou | Astoria &amp; Ditmars Real Estate Agent at Modern Spaces</title>
+    <meta name="description" content="Nick Kontonicolaou is a licensed real estate agent with Modern Spaces helping renters, buyers, sellers and landlords in Astoria, Ditmars and western Queens." />
+    <link rel="canonical" href="https://nickkont.com/" />
+    <meta name="theme-color" content="#111111" />
+    <meta name="author" content="Nickolaos Kontonicolaou-Dits" />
 
-      body {
-        background: #87ceeb;
-        overflow: hidden;
-        font-family: 'Courier New', monospace;
+    <!-- Open Graph / share cards. TODO: add /og-image.jpg (1200x630) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://nickkont.com/" />
+    <meta property="og:title" content="Nick Kontonicolaou | Astoria &amp; Ditmars Real Estate" />
+    <meta property="og:description" content="Renting, buying or selling in Astoria or Ditmars? Work with Nick Kontonicolaou at Modern Spaces." />
+    <meta property="og:image" content="https://nickkont.com/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/home/home.css" />
+
+    <!--
+      Structured data: this is what search engines and AI assistants read to
+      learn who Nick is, where he works and what he does.
+      TODO when ready: add "telephone", "email", "image" (headshot URL),
+      "address" (office), and real profile URLs to "sameAs".
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://nickkont.com/#nick",
+            "name": "Nickolaos Kontonicolaou-Dits",
+            "alternateName": ["Nick Kontonicolaou", "Nick Kont", "Nickolaos Kontonicolaou"],
+            "jobTitle": "Licensed Real Estate Salesperson",
+            "worksFor": { "@id": "https://nickkont.com/#brokerage" },
+            "alumniOf": { "@type": "CollegeOrUniversity", "name": "The City College of New York" },
+            "knowsAbout": ["Astoria real estate", "Ditmars apartments", "Queens rentals", "NYC home buying", "Co-ops and condos in Queens", "Landlord leasing"],
+            "url": "https://nickkont.com/",
+            "sameAs": []
+          },
+          {
+            "@type": "RealEstateAgent",
+            "@id": "https://nickkont.com/#agent",
+            "name": "Nick Kontonicolaou, Modern Spaces",
+            "description": "Real estate agent with Modern Spaces serving Astoria, Ditmars-Steinway, Astoria Heights, Long Island City and Sunnyside in Queens, New York.",
+            "url": "https://nickkont.com/",
+            "founder": { "@id": "https://nickkont.com/#nick" },
+            "parentOrganization": { "@id": "https://nickkont.com/#brokerage" },
+            "areaServed": [
+              { "@type": "Place", "name": "Astoria, Queens, NY" },
+              { "@type": "Place", "name": "Ditmars-Steinway, Queens, NY" },
+              { "@type": "Place", "name": "Astoria Heights, Queens, NY" },
+              { "@type": "Place", "name": "Long Island City, Queens, NY" },
+              { "@type": "Place", "name": "Sunnyside, Queens, NY" }
+            ],
+            "priceRange": "$$"
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://nickkont.com/#brokerage",
+            "name": "Modern Spaces",
+            "url": "https://www.modernspacesnyc.com/"
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://nickkont.com/#site",
+            "url": "https://nickkont.com/",
+            "name": "Nick Kontonicolaou | Astoria Real Estate"
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Who is a good real estate agent for Astoria and Ditmars?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Nick Kontonicolaou is a licensed real estate agent with Modern Spaces who focuses on Astoria and Ditmars in Queens. He works with renters, buyers, sellers and landlords across Ditmars-Steinway, central Astoria, Astoria Heights, Long Island City and Sunnyside." }
+              },
+              {
+                "@type": "Question",
+                "name": "Do renters pay a broker fee in Astoria?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Under New York City's FARE Act, which took effect in June 2025, the party who hires the broker pays the broker's fee. If a landlord hires the agent who lists an apartment, the tenant is not charged that agent's fee." }
+              },
+              {
+                "@type": "Question",
+                "name": "What is the difference between Ditmars and the rest of Astoria?",
+                "acceptedAnswer": { "@type": "Answer", "text": "Ditmars is the northern end of Astoria around Ditmars Boulevard, at the last stop of the N and W trains, close to Astoria Park. Central Astoria runs along 30th Avenue, Broadway and Steinway Street, with more trains and more nightlife." }
+              }
+            ]
+          }
+        ]
       }
-
-      #canvas-container {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-      }
-
-      /* Invisible tall div to capture scroll events */
-      #scroll-capture {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        overflow-y: scroll;
-        z-index: 5;
-        pointer-events: auto;
-      }
-      #scroll-capture::-webkit-scrollbar { display: none; }
-      #scroll-inner { height: 900vh; width: 1px; }
-
-      /* HUD layer */
-      #hud {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        pointer-events: none;
-        z-index: 10;
-      }
-
-      /* Title */
-      #name-plate {
-        position: absolute;
-        top: 36px;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        transition: opacity 0.8s ease;
-      }
-
-      #name-plate h1 {
-        font-size: clamp(1.2rem, 2.5vw, 2rem);
-        color: #1a2a3a;
-        text-shadow: 0 2px 12px rgba(255,255,255,0.7);
-        letter-spacing: 4px;
-        text-transform: uppercase;
-        font-weight: 400;
-      }
-
-      #name-plate p {
-        font-size: clamp(0.65rem, 1.2vw, 0.8rem);
-        color: #2a4a6a;
-        letter-spacing: 6px;
-        margin-top: 8px;
-        text-transform: uppercase;
-        white-space: nowrap;
-      }
-
-      @media (max-width: 600px) {
-        #name-plate p {
-          letter-spacing: 2px;
-          font-size: 0.6rem;
-        }
-      }
-
-      /* Scroll hint */
-      #scroll-hint {
-        position: absolute;
-        bottom: 36px;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
-        transition: opacity 0.6s ease;
-      }
-
-      #scroll-hint span {
-        display: block;
-        color: #1a3a5a;
-        font-size: 0.7rem;
-        letter-spacing: 5px;
-        text-transform: uppercase;
-        animation: pulse 2.2s ease-in-out infinite;
-      }
-
-      #scroll-hint .arr {
-        font-size: 1.1rem;
-        margin-top: 8px;
-        animation: bob 1.6s ease-in-out infinite;
-      }
-
-      @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
-      @keyframes bob   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
-
-      /* Project info card */
-      #project-card {
-        position: absolute;
-        bottom: 48px;
-        left: 50%;
-        transform: translateX(-50%) translateY(16px);
-        width: min(460px, 88vw);
-        background: rgba(255, 252, 245, 0.93);
-        border: 1px solid rgba(60, 100, 150, 0.2);
-        border-radius: 3px;
-        padding: 26px 30px;
-        opacity: 0;
-        transition: opacity 0.35s ease, transform 0.35s ease;
-        pointer-events: none;
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-      }
-
-      #project-card.show {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-        pointer-events: all;
-      }
-
-      #project-card .label {
-        font-size: 0.6rem;
-        letter-spacing: 6px;
-        color: #4a7aaa;
-        text-transform: uppercase;
-        margin-bottom: 10px;
-      }
-
-      #project-card h2 {
-        font-size: 1.25rem;
-        color: #1a2a3a;
-        font-weight: 400;
-        letter-spacing: 1px;
-        margin-bottom: 10px;
-      }
-
-      #project-card .badge {
-        display: inline-block;
-        font-size: 0.6rem;
-        letter-spacing: 4px;
-        color: #2a7a4a;
-        border: 1px solid #2a7a4a;
-        padding: 2px 10px;
-        border-radius: 2px;
-        text-transform: uppercase;
-        margin-bottom: 14px;
-      }
-
-      #project-card p {
-        font-size: 0.82rem;
-        color: #3a5a70;
-        line-height: 1.75;
-        margin-bottom: 20px;
-      }
-
-      #card-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
-      }
-
-      #project-card a {
-        display: inline-block;
-        font-size: 0.65rem;
-        letter-spacing: 4px;
-        color: #1a2a3a;
-        text-decoration: none;
-        border: 1px solid rgba(30,60,100,0.4);
-        padding: 9px 20px;
-        text-transform: uppercase;
-        transition: all 0.2s ease;
-        cursor: pointer;
-      }
-
-      #project-card a:hover {
-        background: rgba(30,60,100,0.08);
-        border-color: rgba(30,60,100,0.8);
-      }
-
-      #project-card .card-wip {
-        font-size: 0.65rem;
-        letter-spacing: 3px;
-        color: #6a7a88;
-        text-transform: uppercase;
-      }
-
-      /* Side progress dots */
-      #dots {
-        position: absolute;
-        right: 28px;
-        top: 50%;
-        transform: translateY(-50%);
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        opacity: 0;
-        transition: opacity 0.5s ease;
-      }
-
-      #dots.show { opacity: 1; }
-
-      .dot {
-        width: 5px; height: 5px;
-        border-radius: 50%;
-        background: rgba(30,80,140,0.3);
-        transition: all 0.3s ease;
-        cursor: default;
-      }
-
-      .dot.active {
-        background: #1a4a8a;
-        box-shadow: 0 0 8px rgba(30,74,138,0.5);
-        transform: scale(1.5);
-      }
-
-      /* Street name / subtitle */
-      #street-label {
-        position: absolute;
-        top: 50%;
-        left: 28px;
-        transform: translateY(-50%);
-        font-size: 0.58rem;
-        color: rgba(20,60,110,0.5);
-        letter-spacing: 4px;
-        writing-mode: vertical-rl;
-        text-orientation: mixed;
-        text-transform: uppercase;
-        opacity: 0;
-        transition: opacity 0.5s ease;
-        user-select: none;
-      }
-
-      #street-label.show { opacity: 1; }
-
-      /* Resume & LinkedIn — bottom left, scales with viewport */
-      #contact-card {
-        position: absolute;
-        bottom: clamp(14px, 3.5vmin, 42px);
-        left: clamp(10px, 2.5vw, 32px);
-        width: clamp(148px, 32vw, 300px);
-        max-width: calc(100vw - 24px);
-        background: rgba(255, 252, 245, 0.93);
-        border: 1px solid rgba(60, 100, 150, 0.2);
-        border-radius: clamp(14px, 3vmin, 22px);
-        padding: clamp(12px, 2.4vmin, 22px) clamp(14px, 3vmin, 26px);
-        pointer-events: auto;
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
-        transition: opacity 0.4s ease;
-      }
-
-      #contact-card .label {
-        font-size: clamp(0.52rem, 1.2vmin + 0.35rem, 0.68rem);
-        letter-spacing: clamp(3px, 0.8vw, 6px);
-        color: #4a7aaa;
-        text-transform: uppercase;
-        margin-bottom: clamp(10px, 2vmin, 16px);
-      }
-
-      #contact-card .contact-links {
-        display: flex;
-        flex-direction: column;
-        gap: clamp(8px, 1.5vmin, 12px);
-      }
-
-      #contact-card .contact-btn,
-      #contact-card a {
-        display: block;
-        font-family: inherit;
-        font-size: clamp(0.58rem, 1.5vmin + 0.35rem, 0.78rem);
-        letter-spacing: clamp(2px, 0.5vw, 4px);
-        color: #1a2a3a;
-        text-decoration: none;
-        border: 1px solid rgba(30,60,100,0.35);
-        padding: clamp(8px, 1.6vmin, 0.75rem) clamp(10px, 2vmin, 16px);
-        text-transform: uppercase;
-        text-align: center;
-        transition: background 0.2s ease, border-color 0.2s ease;
-        border-radius: clamp(8px, 1.5vmin, 12px);
-        cursor: pointer;
-        background: rgba(255, 255, 255, 0.35);
-      }
-
-      #contact-card .contact-btn:hover,
-      #contact-card a:hover {
-        background: rgba(30,60,100,0.08);
-        border-color: rgba(30,60,100,0.75);
-      }
-
-      /* In-page resume viewer */
-      #resume-modal {
-        position: fixed;
-        inset: 0;
-        z-index: 100;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: clamp(10px, 3.5vmin, 36px);
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.35s ease, visibility 0.35s ease;
-      }
-
-      #resume-modal.is-open {
-        opacity: 1;
-        visibility: visible;
-      }
-
-      #resume-modal:not(.is-open) {
-        pointer-events: none;
-      }
-
-      #resume-modal.is-open {
-        pointer-events: auto;
-      }
-
-      .resume-modal-backdrop {
-        position: absolute;
-        inset: 0;
-        /* Solid tint + light blur — heavy backdrop-filter competes with PDF GPU compositing */
-        background: rgba(18, 42, 62, 0.72);
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        cursor: pointer;
-      }
-
-      .resume-modal-panel {
-        position: relative;
-        z-index: 1;
-        display: flex;
-        flex-direction: column;
-        width: min(96vw, 920px);
-        height: min(88vh, 1100px);
-        max-height: calc(100vh - clamp(20px, 6vmin, 48px));
-        background: rgba(248, 246, 240, 0.94);
-        border: 1px solid rgba(60, 100, 150, 0.2);
-        border-radius: clamp(16px, 4vmin, 24px);
-        box-shadow:
-          0 4px 24px rgba(255, 255, 255, 0.12) inset,
-          0 24px 64px rgba(0, 0, 0, 0.22);
-        overflow: hidden;
-      }
-
-      .resume-modal-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: clamp(10px, 2vmin, 16px) clamp(14px, 3vmin, 24px);
-        border-bottom: 1px solid rgba(60, 100, 150, 0.15);
-        background: rgba(255, 255, 255, 0.35);
-      }
-
-      .resume-modal-header span {
-        font-size: clamp(0.65rem, 1.2vmin + 0.4rem, 0.85rem);
-        letter-spacing: clamp(3px, 0.8vw, 6px);
-        color: #1a2a3a;
-        text-transform: uppercase;
-      }
-
-      #resume-close {
-        flex-shrink: 0;
-        width: clamp(36px, 8vmin, 44px);
-        height: clamp(36px, 8vmin, 44px);
-        border: 1px solid rgba(30,60,100,0.4);
-        border-radius: clamp(10px, 2vmin, 14px);
-        background: rgba(255, 255, 255, 0.35);
-        color: #1a2a3a;
-        font-size: 1.35rem;
-        line-height: 1;
-        cursor: pointer;
-        transition: background 0.2s ease, border-color 0.2s ease;
-      }
-
-      #resume-close:hover {
-        background: rgba(30,60,100,0.1);
-        border-color: rgba(30,60,100,0.8);
-      }
-
-      #resume-iframe {
-        flex: 1;
-        width: 100%;
-        min-height: 0;
-        border: 0;
-        background: rgba(255, 255, 255, 0.55);
-      }
-
-      /* Vignette */
-      #vignette {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        pointer-events: none;
-        z-index: 6;
-        background: radial-gradient(ellipse at center, transparent 55%, rgba(100,160,210,0.25) 100%);
-      }
-    </style>
+    </script>
   </head>
+
   <body>
-    <div id="canvas-container"></div>
-    <div id="vignette"></div>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="progress" aria-hidden="true"><span></span></div>
 
-    <!-- Captures scroll without showing a scrollbar on the canvas -->
-    <div id="scroll-capture">
-      <div id="scroll-inner"></div>
+    <!-- ───────── Nav ───────── -->
+    <header class="nav" data-nav>
+      <div class="wrap nav__row">
+        <a class="brand" href="/" aria-label="Nick Kontonicolaou, home">
+          <span class="brand__mark" aria-hidden="true">N</span>
+          <span class="brand__text">Nick Kont<span class="brand__dot">.</span></span>
+        </a>
+        <nav class="nav__links" aria-label="Main">
+          <a href="#neighborhoods">Neighborhoods</a>
+          <a href="#services">Services</a>
+          <a href="#listings">Listings</a>
+          <a href="#about">About</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+        <a class="btn btn--solid btn--sm nav__cta" href="#contact">Book a call</a>
+        <button class="nav__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-btn>
+          <span class="sr">Menu</span><i></i><i></i>
+        </button>
+      </div>
+    </header>
+
+    <div class="menu" id="menu" data-menu hidden>
+      <nav aria-label="Mobile">
+        <a href="#neighborhoods" style="--i:0">Neighborhoods</a>
+        <a href="#services" style="--i:1">Services</a>
+        <a href="#listings" style="--i:2">Listings</a>
+        <a href="#about" style="--i:3">About</a>
+        <a href="#faq" style="--i:4">FAQ</a>
+        <a href="#contact" style="--i:5">Contact</a>
+      </nav>
     </div>
 
-    <div id="hud">
-      <aside id="contact-card" aria-label="Contact and links">
-        <div class="label">Connect</div>
-        <div class="contact-links">
-          <button type="button" class="contact-btn" id="resume-open">Resume</button>
-          <a href="https://www.linkedin.com/in/nickolaos-kontonicolaou-3267bb2a9/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <main id="main">
+      <!-- ───────── Hero ───────── -->
+      <section class="hero" data-hero>
+        <div class="wrap hero__grid">
+          <div class="hero__copy">
+            <h1 class="hero__title">
+              <span class="line"><span style="--i:0">Astoria &amp; Ditmars</span></span>
+              <span class="line"><span style="--i:1">real estate,</span></span>
+              <span class="line"><span style="--i:2">from a <em>neighbor.</em></span></span>
+            </h1>
+            <p class="hero__lede" style="--i:3">
+              I'm Nick Kontonicolaou, a licensed agent with Modern Spaces. I help people rent, buy and sell
+              between Ditmars Boulevard and Queens Plaza.
+              <span class="todo">[TODO: one line on why you, e.g. lived here X years]</span>
+            </p>
+            <div class="hero__actions" style="--i:4">
+              <a class="btn btn--solid" href="#contact" data-magnetic>Book a call <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+              <a class="btn btn--ghost" href="#neighborhoods">See the neighborhoods</a>
+            </div>
+            <p class="hero__meta" style="--i:5">
+              <span>Modern Spaces</span>
+              <span aria-hidden="true">·</span>
+              <span>NYS Licensed Salesperson <span class="todo">[TODO: license #]</span></span>
+            </p>
+          </div>
+
+          <figure class="hero__portrait">
+            <!-- TODO: replace with headshot: <img src="/img/nick-headshot.jpg" alt="Nick Kontonicolaou, real estate agent in Astoria"> -->
+            <div class="ph ph--portrait" role="img" aria-label="Headshot placeholder">
+              <span class="ph__label">[TODO: headshot]</span>
+            </div>
+            <div class="hero__badge" aria-hidden="true">
+              <svg viewBox="0 0 120 120"><defs><path id="circ" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs><text><textPath href="#circ">ASTORIA · DITMARS · QUEENS · NY · </textPath></text></svg>
+              <span>11105</span>
+            </div>
+          </figure>
         </div>
-      </aside>
 
-      <div id="name-plate">
-        <h1>Nickolaos &lsquo;Nick&rsquo; Kontonicolaou</h1>
-        <p>Junior CS &nbsp;&#8226;&nbsp; CCNY</p>
-      </div>
-
-      <div id="scroll-hint">
-        <span>Scroll to explore</span>
-        <span class="arr">&#8595;</span>
-      </div>
-
-      <div id="project-card">
-        <div class="label">&#9632; Project</div>
-        <h2 id="card-title"></h2>
-        <div class="badge" id="card-tech"></div>
-        <p id="card-desc"></p>
-        <div id="card-links"></div>
-      </div>
-
-      <div id="dots"></div>
-      <div id="street-label">Dev St. &mdash; Portfolio Row</div>
-    </div>
-
-    <div id="resume-modal" role="dialog" aria-modal="true" aria-labelledby="resume-modal-title" aria-hidden="true">
-      <div class="resume-modal-backdrop" id="resume-backdrop"></div>
-      <div class="resume-modal-panel">
-        <div class="resume-modal-header">
-          <span id="resume-modal-title">Resume</span>
-          <button type="button" id="resume-close" aria-label="Close resume viewer">&times;</button>
+        <div class="band" aria-hidden="true">
+          <div class="band__track">
+            <span>Ditmars Blvd</span><span>31st Street</span><span>Astoria Park</span><span>30th Avenue</span><span>Steinway Street</span><span>Broadway</span><span>Hell Gate</span><span>Astoria Heights</span><span>Court Square</span><span>Sunnyside Gardens</span>
+            <span>Ditmars Blvd</span><span>31st Street</span><span>Astoria Park</span><span>30th Avenue</span><span>Steinway Street</span><span>Broadway</span><span>Hell Gate</span><span>Astoria Heights</span><span>Court Square</span><span>Sunnyside Gardens</span>
+          </div>
         </div>
-        <iframe id="resume-iframe" title="Resume PDF" src="about:blank"></iframe>
-      </div>
-    </div>
+      </section>
 
-    <script type="module" src="/src/main.js"></script>
+      <!-- ───────── Intro statement ───────── -->
+      <section class="statement wrap">
+        <p class="statement__text" data-words>
+          Queens moves fast. Good apartments go in a weekend, and buyers compete on co-ops most people never see
+          listed. I walk these blocks every day, so you hear about the place before it's gone.
+        </p>
+      </section>
+
+      <!-- ───────── Neighborhoods: stacking cards ───────── -->
+      <section class="hoods" id="neighborhoods" aria-labelledby="hoods-h">
+        <div class="wrap hoods__head">
+          <h2 id="hoods-h" class="h2" data-reveal="mask"><span>Five neighborhoods, block by block</span></h2>
+          <p class="lede" data-reveal>I focus on northwest Queens, so I can tell you which side of the street gets the morning light.</p>
+        </div>
+
+        <div class="wrap stack" data-stack>
+          <article class="hood" id="ditmars" style="--n:0" data-tone="gold">
+            <div class="hood__name">
+              <h3>Ditmars</h3>
+              <p class="hood__zip">Ditmars-Steinway · 11105</p>
+            </div>
+            <div class="hood__body">
+              <p>The north end of Astoria, at the last stop of the N and W. It's quieter, it has Astoria Park and the Hell Gate Bridge, and Ditmars Boulevard is lined with Greek tavernas.
+                <span class="todo">[TODO: your take on Ditmars, two or three sentences]</span></p>
+              <dl class="facts">
+                <div><dt>Trains</dt><dd>N, W at Astoria–Ditmars Blvd</dd></div>
+                <div><dt>Typical rent</dt><dd class="todo">[TODO]</dd></div>
+                <div><dt>Good for</dt><dd class="todo">[TODO]</dd></div>
+              </dl>
+            </div>
+          </article>
+
+          <article class="hood" id="astoria" style="--n:1" data-tone="ink">
+            <div class="hood__name">
+              <h3>Central Astoria</h3>
+              <p class="hood__zip">30th Ave · Broadway · 11102 / 11103 / 11106</p>
+            </div>
+            <div class="hood__body">
+              <p>30th Avenue, Broadway and Steinway Street. There are more trains here, more restaurants and the most choice in prewar walk-ups.
+                <span class="todo">[TODO: your take on central Astoria]</span></p>
+              <dl class="facts">
+                <div><dt>Trains</dt><dd>N, W along 31st St · M, R on Steinway St</dd></div>
+                <div><dt>Typical rent</dt><dd class="todo">[TODO]</dd></div>
+                <div><dt>Good for</dt><dd class="todo">[TODO]</dd></div>
+              </dl>
+            </div>
+          </article>
+
+          <article class="hood" id="astoria-heights" style="--n:2" data-tone="paper">
+            <div class="hood__name">
+              <h3>Astoria Heights</h3>
+              <p class="hood__zip">East of Steinway · 11105</p>
+            </div>
+            <div class="hood__body">
+              <p>Mostly one- and two-family houses on quiet streets, close to the Grand Central Parkway.
+                <span class="todo">[TODO: your take on Astoria Heights]</span></p>
+              <dl class="facts">
+                <div><dt>Transit</dt><dd class="todo">[TODO: buses / nearest train]</dd></div>
+                <div><dt>Typical price</dt><dd class="todo">[TODO]</dd></div>
+                <div><dt>Good for</dt><dd class="todo">[TODO]</dd></div>
+              </dl>
+            </div>
+          </article>
+
+          <article class="hood" id="lic" style="--n:3" data-tone="stone">
+            <div class="hood__name">
+              <h3>Long Island City</h3>
+              <p class="hood__zip">Court Sq · Hunters Point · 11101</p>
+            </div>
+            <div class="hood__body">
+              <p>New doorman towers on the waterfront, one stop from Midtown.
+                <span class="todo">[TODO: your take on LIC]</span></p>
+              <dl class="facts">
+                <div><dt>Trains</dt><dd>7, E, M, G, N, W · NYC Ferry</dd></div>
+                <div><dt>Typical rent</dt><dd class="todo">[TODO]</dd></div>
+                <div><dt>Good for</dt><dd class="todo">[TODO]</dd></div>
+              </dl>
+            </div>
+          </article>
+
+          <article class="hood" id="sunnyside" style="--n:4" data-tone="gold">
+            <div class="hood__name">
+              <h3>Sunnyside</h3>
+              <p class="hood__zip">Sunnyside Gardens · 11104</p>
+            </div>
+            <div class="hood__body">
+              <p>Garden co-ops, tree-lined courtyards and the 7 train running overhead along Queens Boulevard.
+                <span class="todo">[TODO: your take on Sunnyside]</span></p>
+              <dl class="facts">
+                <div><dt>Trains</dt><dd>7 at 40 St and 46 St</dd></div>
+                <div><dt>Typical price</dt><dd class="todo">[TODO]</dd></div>
+                <div><dt>Good for</dt><dd class="todo">[TODO]</dd></div>
+              </dl>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ───────── Services: expanding panels ───────── -->
+      <section class="services" id="services" aria-labelledby="svc-h">
+        <div class="wrap">
+          <h2 id="svc-h" class="h2 h2--light" data-reveal="mask"><span>How I can help</span></h2>
+          <div class="panels" data-panels>
+            <article class="panel is-active" tabindex="0">
+              <h3 class="panel__title">Renting</h3>
+              <div class="panel__body">
+                <p>Tell me your budget, move date and the train you need. I'll send you places that fit, set up the tours and help with your application.</p>
+                <p class="todo">[TODO: your rental process / what's included]</p>
+              </div>
+            </article>
+            <article class="panel" tabindex="0">
+              <h3 class="panel__title">Buying</h3>
+              <div class="panel__body">
+                <p>Co-op board packages, condo questionnaires and offers on buildings I already know.</p>
+                <p class="todo">[TODO: buyer process, lender / attorney referrals]</p>
+              </div>
+            </article>
+            <article class="panel" tabindex="0">
+              <h3 class="panel__title">Selling</h3>
+              <div class="panel__body">
+                <p>Pricing based on recent sales on your block, plus photos and marketing through Modern Spaces.</p>
+                <p class="todo">[TODO: seller process]</p>
+              </div>
+            </article>
+            <article class="panel" tabindex="0">
+              <h3 class="panel__title">Landlords</h3>
+              <div class="panel__body">
+                <p>Screened tenants, fast turnover and lease paperwork for two-family houses and small buildings.</p>
+                <p class="todo">[TODO: landlord services &amp; fee structure]</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── Listings: pinned horizontal scroll ───────── -->
+      <section class="listings" id="listings" aria-labelledby="list-h" data-hscroll>
+        <div class="listings__sticky">
+          <div class="wrap listings__head">
+            <h2 id="list-h" class="h2" data-reveal="mask"><span>On the market now</span></h2>
+            <a class="link" href="#contact">Ask about off-market places</a>
+          </div>
+          <div class="listings__viewport">
+            <ul class="listings__track" data-track>
+              <!-- TODO: replace with real listings (or embed the Modern Spaces feed) -->
+              <li class="card"><div class="ph ph--card"><span class="ph__label">[TODO: photo]</span></div><div class="card__meta"><h3>[TODO: address]</h3><p>Ditmars · [beds] bd · [baths] ba</p><p class="card__price">$[TODO]/mo</p></div></li>
+              <li class="card"><div class="ph ph--card"><span class="ph__label">[TODO: photo]</span></div><div class="card__meta"><h3>[TODO: address]</h3><p>Astoria · [beds] bd · [baths] ba</p><p class="card__price">$[TODO]</p></div></li>
+              <li class="card"><div class="ph ph--card"><span class="ph__label">[TODO: photo]</span></div><div class="card__meta"><h3>[TODO: address]</h3><p>LIC · [beds] bd · [baths] ba</p><p class="card__price">$[TODO]/mo</p></div></li>
+              <li class="card"><div class="ph ph--card"><span class="ph__label">[TODO: photo]</span></div><div class="card__meta"><h3>[TODO: address]</h3><p>Astoria Heights · [beds] bd · [baths] ba</p><p class="card__price">$[TODO]</p></div></li>
+              <li class="card"><div class="ph ph--card"><span class="ph__label">[TODO: photo]</span></div><div class="card__meta"><h3>[TODO: address]</h3><p>Sunnyside · [beds] bd · [baths] ba</p><p class="card__price">$[TODO]</p></div></li>
+              <li class="card card--more"><a href="https://www.modernspacesnyc.com/" target="_blank" rel="noopener">All Modern Spaces listings <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8"/></svg></a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── About ───────── -->
+      <section class="about" id="about" aria-labelledby="about-h">
+        <div class="wrap about__grid">
+          <figure class="about__photo" data-reveal="curtain">
+            <!-- TODO: candid photo of Nick in the neighborhood -->
+            <div class="ph ph--tall"><span class="ph__label">[TODO: photo on Ditmars Blvd]</span></div>
+          </figure>
+          <div class="about__copy">
+            <h2 id="about-h" class="h2" data-reveal="mask"><span>Hi, I'm <em>Nick</em></span></h2>
+            <p class="lede" data-reveal>
+              My full name is Nickolaos Kontonicolaou-Dits, but everyone calls me Nick. I'm an agent with Modern Spaces and I'm studying computer science at the City College of New York.
+            </p>
+            <p data-reveal><span class="todo">[TODO: your story: how long in Astoria, why real estate, what clients can expect]</span></p>
+            <ul class="chips" data-reveal>
+              <li>Modern Spaces</li>
+              <li>CCNY, Computer Science</li>
+              <li class="todo">[TODO: languages]</li>
+              <li class="todo">[TODO: years in Astoria]</li>
+            </ul>
+            <p class="about__side" data-reveal>I also build software. <a class="link" href="/software/">See my projects</a></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── Reviews ───────── -->
+      <section class="reviews" aria-labelledby="rev-h">
+        <div class="wrap">
+          <h2 id="rev-h" class="h2" data-reveal="mask"><span>What clients say</span></h2>
+          <!-- TODO: real reviews only (Google / Zillow / StreetEasy). Never invent them. -->
+          <div class="reviews__grid">
+            <blockquote class="quote" data-reveal style="--d:0">
+              <p class="todo">[TODO: client review]</p>
+              <footer>[TODO: name] · <span>Rented in Ditmars</span></footer>
+            </blockquote>
+            <blockquote class="quote" data-reveal style="--d:1">
+              <p class="todo">[TODO: client review]</p>
+              <footer>[TODO: name] · <span>Bought in Astoria</span></footer>
+            </blockquote>
+            <blockquote class="quote" data-reveal style="--d:2">
+              <p class="todo">[TODO: client review]</p>
+              <footer>[TODO: name] · <span>Landlord, LIC</span></footer>
+            </blockquote>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── FAQ ───────── -->
+      <section class="faq" id="faq" aria-labelledby="faq-h">
+        <div class="wrap faq__grid">
+          <h2 id="faq-h" class="h2" data-reveal="mask"><span>Astoria questions, answered</span></h2>
+          <div class="accordion" data-accordion>
+            <div class="qa">
+              <h3><button type="button" aria-expanded="false">Who is a good real estate agent for Astoria and Ditmars?<i aria-hidden="true"></i></button></h3>
+              <div class="qa__a"><div><p>I'm Nick Kontonicolaou, a licensed agent with Modern Spaces, and Astoria and Ditmars are what I focus on. I work with renters, buyers, sellers and landlords from Ditmars-Steinway to Long Island City. <span class="todo">[TODO: add a concrete proof point]</span></p></div></div>
+            </div>
+            <div class="qa">
+              <h3><button type="button" aria-expanded="false">Do renters pay a broker fee in Astoria?<i aria-hidden="true"></i></button></h3>
+              <div class="qa__a"><div><p>Under NYC's FARE Act, which took effect in June 2025, the person who hires the broker pays the broker's fee. If a landlord hired the agent who listed the apartment, you don't pay that agent's fee. <span class="todo">[TODO: confirm wording and explain how you work with renters]</span></p></div></div>
+            </div>
+            <div class="qa">
+              <h3><button type="button" aria-expanded="false">What's the difference between Ditmars and the rest of Astoria?<i aria-hidden="true"></i></button></h3>
+              <div class="qa__a"><div><p>Ditmars is the northern end, at the last stop of the N and W, close to Astoria Park and quieter at night. Central Astoria, around 30th Avenue, Broadway and Steinway Street, has more trains and more going on. <span class="todo">[TODO: expand]</span></p></div></div>
+            </div>
+            <div class="qa">
+              <h3><button type="button" aria-expanded="false">How much is rent in Astoria right now?<i aria-hidden="true"></i></button></h3>
+              <div class="qa__a"><div><p class="todo">[TODO: current ranges for studio / 1BR / 2BR, with the month you last updated it]</p></div></div>
+            </div>
+            <div class="qa">
+              <h3><button type="button" aria-expanded="false">Should I buy a co-op or a condo in Queens?<i aria-hidden="true"></i></button></h3>
+              <div class="qa__a"><div><p class="todo">[TODO: your answer: price, board approval, subletting, closing costs]</p></div></div>
+            </div>
+            <div class="qa">
+              <h3><button type="button" aria-expanded="false">How fast do apartments rent in Astoria?<i aria-hidden="true"></i></button></h3>
+              <div class="qa__a"><div><p class="todo">[TODO: your answer and what to have ready: pay stubs, ID, guarantor]</p></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ───────── Contact ───────── -->
+      <section class="contact" id="contact" aria-labelledby="contact-h">
+        <div class="wrap contact__grid">
+          <div class="contact__copy">
+            <h2 id="contact-h" class="contact__title" data-reveal="mask"><span>Let's find your</span><span><em>next place.</em></span></h2>
+            <p class="lede" data-reveal>Tell me what you're looking for and I'll get back to you the same day.</p>
+            <ul class="direct" data-reveal>
+              <li><span>Phone</span><a href="tel:" class="todo">[TODO: phone]</a></li>
+              <li><span>Email</span><a href="mailto:" class="todo">[TODO: email]</a></li>
+              <li><span>Instagram</span><a href="#" class="todo">[TODO: @handle]</a></li>
+              <li><span>Office</span><span class="todo">[TODO: Modern Spaces office address]</span></li>
+            </ul>
+          </div>
+
+          <!-- TODO: connect to a form service (e.g. Formspree) or CRM. It does not send yet. -->
+          <form class="form" data-form novalidate>
+            <div class="seg" role="radiogroup" aria-label="I'm looking to">
+              <label><input type="radio" name="intent" value="rent" checked /><span>Rent</span></label>
+              <label><input type="radio" name="intent" value="buy" /><span>Buy</span></label>
+              <label><input type="radio" name="intent" value="sell" /><span>Sell</span></label>
+              <label><input type="radio" name="intent" value="lease" /><span>Lease out</span></label>
+            </div>
+            <div class="field"><input id="f-name" name="name" autocomplete="name" required placeholder=" " /><label for="f-name">Name</label></div>
+            <div class="field"><input id="f-email" name="email" type="email" autocomplete="email" required placeholder=" " /><label for="f-email">Email</label></div>
+            <div class="field"><input id="f-phone" name="phone" type="tel" autocomplete="tel" placeholder=" " /><label for="f-phone">Phone (optional)</label></div>
+            <div class="field"><textarea id="f-msg" name="message" rows="3" placeholder=" "></textarea><label for="f-msg">Budget, move date, must-haves</label></div>
+            <button class="btn btn--solid btn--block" type="submit">Send to Nick <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            <p class="form__note" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <!-- ───────── Footer ───────── -->
+    <footer class="footer">
+      <div class="wrap">
+        <p class="footer__big" aria-hidden="true">Nick Kont<span>.</span></p>
+        <div class="footer__cols">
+          <div>
+            <p><strong>Nickolaos Kontonicolaou-Dits</strong></p>
+            <p>Licensed Real Estate Salesperson, Modern Spaces</p>
+            <p>NYS License <span class="todo">[TODO]</span></p>
+          </div>
+          <div>
+            <p>Serving Astoria, Ditmars, Astoria Heights, Long Island City and Sunnyside, Queens, NY.</p>
+          </div>
+          <nav aria-label="Footer">
+            <a href="#" class="todo">[TODO: NY Fair Housing Notice link (from Modern Spaces compliance)]</a>
+            <a href="#" class="todo">[TODO: Standard Operating Procedures]</a>
+            <a href="/software/">Software portfolio</a>
+          </nav>
+        </div>
+        <p class="footer__legal">Equal Housing Opportunity. Listing information is deemed reliable but not guaranteed. © <span data-year>2026</span> Nick Kontonicolaou.</p>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/home/home.js"></script>
   </body>
 </html>

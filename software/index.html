@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nick Kontonicolaou | Software Portfolio</title>
+    <meta name="description" content="Software projects by Nickolaos 'Nick' Kontonicolaou-Dits, CS student at CCNY. For real estate in Astoria and Ditmars, visit nickkont.com." />
+    <link rel="canonical" href="https://nickkont.com/software/" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+
+      body {
+        background: #87ceeb;
+        overflow: hidden;
+        font-family: 'Courier New', monospace;
+      }
+
+      #canvas-container {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+      }
+
+      /* Invisible tall div to capture scroll events */
+      #scroll-capture {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        overflow-y: scroll;
+        z-index: 5;
+        pointer-events: auto;
+      }
+      #scroll-capture::-webkit-scrollbar { display: none; }
+      #scroll-inner { height: 900vh; width: 1px; }
+
+      /* HUD layer */
+      #hud {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      /* Title */
+      #name-plate {
+        position: absolute;
+        top: 36px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        transition: opacity 0.8s ease;
+      }
+
+      #name-plate h1 {
+        font-size: clamp(1.2rem, 2.5vw, 2rem);
+        color: #1a2a3a;
+        text-shadow: 0 2px 12px rgba(255,255,255,0.7);
+        letter-spacing: 4px;
+        text-transform: uppercase;
+        font-weight: 400;
+      }
+
+      #name-plate p {
+        font-size: clamp(0.65rem, 1.2vw, 0.8rem);
+        color: #2a4a6a;
+        letter-spacing: 6px;
+        margin-top: 8px;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      @media (max-width: 600px) {
+        #name-plate p {
+          letter-spacing: 2px;
+          font-size: 0.6rem;
+        }
+      }
+
+      /* Scroll hint */
+      #scroll-hint {
+        position: absolute;
+        bottom: 36px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        transition: opacity 0.6s ease;
+      }
+
+      #scroll-hint span {
+        display: block;
+        color: #1a3a5a;
+        font-size: 0.7rem;
+        letter-spacing: 5px;
+        text-transform: uppercase;
+        animation: pulse 2.2s ease-in-out infinite;
+      }
+
+      #scroll-hint .arr {
+        font-size: 1.1rem;
+        margin-top: 8px;
+        animation: bob 1.6s ease-in-out infinite;
+      }
+
+      @keyframes pulse { 0%,100%{opacity:0.4} 50%{opacity:1} }
+      @keyframes bob   { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
+
+      /* Project info card */
+      #project-card {
+        position: absolute;
+        bottom: 48px;
+        left: 50%;
+        transform: translateX(-50%) translateY(16px);
+        width: min(460px, 88vw);
+        background: rgba(255, 252, 245, 0.93);
+        border: 1px solid rgba(60, 100, 150, 0.2);
+        border-radius: 3px;
+        padding: 26px 30px;
+        opacity: 0;
+        transition: opacity 0.35s ease, transform 0.35s ease;
+        pointer-events: none;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      }
+
+      #project-card.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+        pointer-events: all;
+      }
+
+      #project-card .label {
+        font-size: 0.6rem;
+        letter-spacing: 6px;
+        color: #4a7aaa;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+      }
+
+      #project-card h2 {
+        font-size: 1.25rem;
+        color: #1a2a3a;
+        font-weight: 400;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+      }
+
+      #project-card .badge {
+        display: inline-block;
+        font-size: 0.6rem;
+        letter-spacing: 4px;
+        color: #2a7a4a;
+        border: 1px solid #2a7a4a;
+        padding: 2px 10px;
+        border-radius: 2px;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+
+      #project-card p {
+        font-size: 0.82rem;
+        color: #3a5a70;
+        line-height: 1.75;
+        margin-bottom: 20px;
+      }
+
+      #card-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+      }
+
+      #project-card a {
+        display: inline-block;
+        font-size: 0.65rem;
+        letter-spacing: 4px;
+        color: #1a2a3a;
+        text-decoration: none;
+        border: 1px solid rgba(30,60,100,0.4);
+        padding: 9px 20px;
+        text-transform: uppercase;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      #project-card a:hover {
+        background: rgba(30,60,100,0.08);
+        border-color: rgba(30,60,100,0.8);
+      }
+
+      #project-card .card-wip {
+        font-size: 0.65rem;
+        letter-spacing: 3px;
+        color: #6a7a88;
+        text-transform: uppercase;
+      }
+
+      /* Side progress dots */
+      #dots {
+        position: absolute;
+        right: 28px;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      #dots.show { opacity: 1; }
+
+      .dot {
+        width: 5px; height: 5px;
+        border-radius: 50%;
+        background: rgba(30,80,140,0.3);
+        transition: all 0.3s ease;
+        cursor: default;
+      }
+
+      .dot.active {
+        background: #1a4a8a;
+        box-shadow: 0 0 8px rgba(30,74,138,0.5);
+        transform: scale(1.5);
+      }
+
+      /* Street name / subtitle */
+      #street-label {
+        position: absolute;
+        top: 50%;
+        left: 28px;
+        transform: translateY(-50%);
+        font-size: 0.58rem;
+        color: rgba(20,60,110,0.5);
+        letter-spacing: 4px;
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+        text-transform: uppercase;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        user-select: none;
+      }
+
+      #street-label.show { opacity: 1; }
+
+      /* Resume & LinkedIn — bottom left, scales with viewport */
+      #contact-card {
+        position: absolute;
+        bottom: clamp(14px, 3.5vmin, 42px);
+        left: clamp(10px, 2.5vw, 32px);
+        width: clamp(148px, 32vw, 300px);
+        max-width: calc(100vw - 24px);
+        background: rgba(255, 252, 245, 0.93);
+        border: 1px solid rgba(60, 100, 150, 0.2);
+        border-radius: clamp(14px, 3vmin, 22px);
+        padding: clamp(12px, 2.4vmin, 22px) clamp(14px, 3vmin, 26px);
+        pointer-events: auto;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        transition: opacity 0.4s ease;
+      }
+
+      #contact-card .label {
+        font-size: clamp(0.52rem, 1.2vmin + 0.35rem, 0.68rem);
+        letter-spacing: clamp(3px, 0.8vw, 6px);
+        color: #4a7aaa;
+        text-transform: uppercase;
+        margin-bottom: clamp(10px, 2vmin, 16px);
+      }
+
+      #contact-card .contact-links {
+        display: flex;
+        flex-direction: column;
+        gap: clamp(8px, 1.5vmin, 12px);
+      }
+
+      #contact-card .contact-btn,
+      #contact-card a {
+        display: block;
+        font-family: inherit;
+        font-size: clamp(0.58rem, 1.5vmin + 0.35rem, 0.78rem);
+        letter-spacing: clamp(2px, 0.5vw, 4px);
+        color: #1a2a3a;
+        text-decoration: none;
+        border: 1px solid rgba(30,60,100,0.35);
+        padding: clamp(8px, 1.6vmin, 0.75rem) clamp(10px, 2vmin, 16px);
+        text-transform: uppercase;
+        text-align: center;
+        transition: background 0.2s ease, border-color 0.2s ease;
+        border-radius: clamp(8px, 1.5vmin, 12px);
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.35);
+      }
+
+      #contact-card .contact-btn:hover,
+      #contact-card a:hover {
+        background: rgba(30,60,100,0.08);
+        border-color: rgba(30,60,100,0.75);
+      }
+
+      /* In-page resume viewer */
+      #resume-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(10px, 3.5vmin, 36px);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.35s ease, visibility 0.35s ease;
+      }
+
+      #resume-modal.is-open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      #resume-modal:not(.is-open) {
+        pointer-events: none;
+      }
+
+      #resume-modal.is-open {
+        pointer-events: auto;
+      }
+
+      .resume-modal-backdrop {
+        position: absolute;
+        inset: 0;
+        /* Solid tint + light blur — heavy backdrop-filter competes with PDF GPU compositing */
+        background: rgba(18, 42, 62, 0.72);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        cursor: pointer;
+      }
+
+      .resume-modal-panel {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        width: min(96vw, 920px);
+        height: min(88vh, 1100px);
+        max-height: calc(100vh - clamp(20px, 6vmin, 48px));
+        background: rgba(248, 246, 240, 0.94);
+        border: 1px solid rgba(60, 100, 150, 0.2);
+        border-radius: clamp(16px, 4vmin, 24px);
+        box-shadow:
+          0 4px 24px rgba(255, 255, 255, 0.12) inset,
+          0 24px 64px rgba(0, 0, 0, 0.22);
+        overflow: hidden;
+      }
+
+      .resume-modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: clamp(10px, 2vmin, 16px) clamp(14px, 3vmin, 24px);
+        border-bottom: 1px solid rgba(60, 100, 150, 0.15);
+        background: rgba(255, 255, 255, 0.35);
+      }
+
+      .resume-modal-header span {
+        font-size: clamp(0.65rem, 1.2vmin + 0.4rem, 0.85rem);
+        letter-spacing: clamp(3px, 0.8vw, 6px);
+        color: #1a2a3a;
+        text-transform: uppercase;
+      }
+
+      #resume-close {
+        flex-shrink: 0;
+        width: clamp(36px, 8vmin, 44px);
+        height: clamp(36px, 8vmin, 44px);
+        border: 1px solid rgba(30,60,100,0.4);
+        border-radius: clamp(10px, 2vmin, 14px);
+        background: rgba(255, 255, 255, 0.35);
+        color: #1a2a3a;
+        font-size: 1.35rem;
+        line-height: 1;
+        cursor: pointer;
+        transition: background 0.2s ease, border-color 0.2s ease;
+      }
+
+      #resume-close:hover {
+        background: rgba(30,60,100,0.1);
+        border-color: rgba(30,60,100,0.8);
+      }
+
+      #resume-iframe {
+        flex: 1;
+        width: 100%;
+        min-height: 0;
+        border: 0;
+        background: rgba(255, 255, 255, 0.55);
+      }
+
+      /* Vignette */
+      #vignette {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: 6;
+        background: radial-gradient(ellipse at center, transparent 55%, rgba(100,160,210,0.25) 100%);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas-container"></div>
+    <div id="vignette"></div>
+
+    <!-- Captures scroll without showing a scrollbar on the canvas -->
+    <div id="scroll-capture">
+      <div id="scroll-inner"></div>
+    </div>
+
+    <div id="hud">
+      <aside id="contact-card" aria-label="Contact and links">
+        <div class="label">Connect</div>
+        <div class="contact-links">
+          <button type="button" class="contact-btn" id="resume-open">Resume</button>
+          <a href="https://www.linkedin.com/in/nickolaos-kontonicolaou-3267bb2a9/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </aside>
+
+      <div id="name-plate">
+        <h1>Nickolaos &lsquo;Nick&rsquo; Kontonicolaou</h1>
+        <p>Junior CS &nbsp;&#8226;&nbsp; CCNY</p>
+      </div>
+
+      <div id="scroll-hint">
+        <span>Scroll to explore</span>
+        <span class="arr">&#8595;</span>
+      </div>
+
+      <div id="project-card">
+        <div class="label">&#9632; Project</div>
+        <h2 id="card-title"></h2>
+        <div class="badge" id="card-tech"></div>
+        <p id="card-desc"></p>
+        <div id="card-links"></div>
+      </div>
+
+      <div id="dots"></div>
+      <div id="street-label">Dev St. &mdash; Portfolio Row</div>
+    </div>
+
+    <div id="resume-modal" role="dialog" aria-modal="true" aria-labelledby="resume-modal-title" aria-hidden="true">
+      <div class="resume-modal-backdrop" id="resume-backdrop"></div>
+      <div class="resume-modal-panel">
+        <div class="resume-modal-header">
+          <span id="resume-modal-title">Resume</span>
+          <button type="button" id="resume-close" aria-label="Close resume viewer">&times;</button>
+        </div>
+        <iframe id="resume-iframe" title="Resume PDF" src="about:blank"></iframe>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

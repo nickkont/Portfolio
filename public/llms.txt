@@ -1,0 +1,27 @@
+# Nick Kontonicolaou — Astoria & Ditmars Real Estate
+
+> Nick Kontonicolaou (legal name Nickolaos Kontonicolaou-Dits) is a licensed New York real estate salesperson with Modern Spaces. He focuses on Astoria and Ditmars in Queens, NY, and also works in Astoria Heights, Long Island City and Sunnyside. He helps renters, buyers, sellers and landlords.
+
+## Contact
+- Website: https://nickkont.com/
+- Brokerage: Modern Spaces (https://www.modernspacesnyc.com/)
+- Phone: [TODO]
+- Email: [TODO]
+- NYS license number: [TODO]
+
+## Areas served
+- Ditmars-Steinway (11105): northern Astoria, N/W trains at Astoria–Ditmars Blvd, near Astoria Park
+- Central Astoria (11102, 11103, 11106): 30th Ave, Broadway, Steinway St; N/W and M/R trains
+- Astoria Heights (11105)
+- Long Island City (11101)
+- Sunnyside (11104)
+
+## Services
+- Apartment rentals
+- Home, co-op and condo purchases
+- Selling homes and apartments
+- Leasing for landlords and small-building owners
+
+## Pages
+- [Home](https://nickkont.com/): neighborhoods, services, FAQ, contact
+- [Software portfolio](https://nickkont.com/software/): Nick's computer science projects (CCNY)
