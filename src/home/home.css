@@ -556,3 +556,14 @@ html { scrollbar-color: var(--stone) var(--bg); }
 
 .hoods__note { grid-column: 2; font-size: 0.9rem; color: var(--muted); margin-top: -16px; }
 @media (max-width: 900px) { .hoods__note { grid-column: 1; margin-top: -24px; } }
+
+/* services: step list inside the open panel */
+.panel__body { max-width: 52ch; }
+.panel__list { display: grid; gap: 10px; font-size: 0.98rem; line-height: 1.45; }
+.panel__list li { position: relative; padding-left: 26px; }
+.panel__list li::before {
+  content: ''; position: absolute; left: 0; top: 0.42em; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--ink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M4 7.2 6.1 9.3 10 5' fill='none' stroke='%23F7A700' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat;
+}
+.panel.is-active .panel__list li { opacity: 0; transform: translateY(8px); animation: fade-up 600ms var(--ease-out) both; animation-delay: calc(380ms + var(--k, 0) * 60ms); }
+.panel__list li:nth-child(2) { --k: 1; } .panel__list li:nth-child(3) { --k: 2; } .panel__list li:nth-child(4) { --k: 3; }
