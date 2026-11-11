@@ -553,3 +553,6 @@ html { scrollbar-color: var(--stone) var(--bg); }
 .direct .link { color: #fff; }
 .direct li > a { justify-self: start; }
 .footer__cols a:hover { color: var(--gold); }
+
+.hoods__note { grid-column: 2; font-size: 0.9rem; color: var(--muted); margin-top: -16px; }
+@media (max-width: 900px) { .hoods__note { grid-column: 1; margin-top: -24px; } }
