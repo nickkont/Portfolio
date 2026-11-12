@@ -567,3 +567,23 @@ html { scrollbar-color: var(--stone) var(--bg); }
 }
 .panel.is-active .panel__list li { opacity: 0; transform: translateY(8px); animation: fade-up 600ms var(--ease-out) both; animation-delay: calc(380ms + var(--k, 0) * 60ms); }
 .panel__list li:nth-child(2) { --k: 1; } .panel__list li:nth-child(3) { --k: 2; } .panel__list li:nth-child(4) { --k: 3; }
+
+/* contact form: spam trap, sending + sent states */
+.form { position: relative; }
+.form__trap { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.form .btn.is-loading { opacity: 0.75; cursor: progress; }
+.form.is-sent > :not(.form__done) { visibility: hidden; }
+.form__done {
+  position: absolute; inset: 0; border-radius: inherit;
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 14px;
+  padding: clamp(24px, 4vw, 48px); background: #1b1c1e; outline: none;
+}
+.form__done:not([hidden]) { animation: fade-up 700ms var(--ease-out) both; }
+.form__done h3 { font-size: clamp(1.6rem, 2.6vw, 2.2rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; }
+.form__done p { color: rgba(255,255,255,0.72); max-width: 40ch; }
+.form__done .link { color: #fff; }
+.form__check { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--gold); }
+.form__check svg { width: 26px; height: 26px; fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 24; stroke-dashoffset: 24; animation: tick 500ms var(--ease-out) 250ms forwards; }
+@keyframes tick { to { stroke-dashoffset: 0; } }
+.form__note .link { color: #fff; }
+.form__done[hidden] { display: none; }

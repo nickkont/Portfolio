@@ -220,11 +220,14 @@ if (!reduce && matchMedia('(hover: hover) and (pointer: fine)').matches) {
   });
 }
 
-// ── Contact form (TODO: wire to Formspree / CRM; nothing is sent yet)
+// ── Contact form → Formspree
 const form = document.querySelector('[data-form]');
-form?.addEventListener('submit', (e) => {
+form?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const note = form.querySelector('.form__note');
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn.disabled) return;
+
   let ok = true;
   form.querySelectorAll('[required]').forEach((input) => {
     const bad = !input.value.trim() || (input.type === 'email' && !input.validity.valid);
@@ -232,10 +235,31 @@ form?.addEventListener('submit', (e) => {
     if (bad) ok = false;
   });
   if (!ok) {
-    note.textContent = 'Add your name and a valid email so Nick can reply.';
+    note.textContent = 'Add your name and a valid email so I can reply.';
+    form.querySelector('.is-error input')?.focus();
     return;
   }
-  note.textContent = 'The form isn’t connected yet. [TODO: hook up form service]';
+
+  const label = btn.innerHTML;
+  btn.disabled = true;
+  btn.classList.add('is-loading');
+  btn.textContent = 'Sending…';
+  note.textContent = '';
+
+  try {
+    const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+    if (!res.ok) throw new Error(String(res.status));
+    form.classList.add('is-sent');
+    const done = form.querySelector('.form__done');
+    done.hidden = false;
+    requestAnimationFrame(() => done.focus({ preventScroll: true }));
+  } catch {
+    btn.disabled = false;
+    btn.classList.remove('is-loading');
+    btn.innerHTML = label;
+    note.innerHTML = 'That didn\u2019t send. Please try again, or reach me at <a class="link" href="tel:+17187916703">(718) 791-6703</a> or <a class="link" href="mailto:nick@modernspaces.com">nick@modernspaces.com</a>.';
+  }
 });
+form?.querySelectorAll('.field input').forEach((i) => i.addEventListener('input', () => i.closest('.field').classList.remove('is-error')));
 
 document.querySelectorAll('[data-year]').forEach((el) => (el.textContent = new Date().getFullYear()));

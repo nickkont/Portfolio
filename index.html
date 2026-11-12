@@ -466,8 +466,8 @@
               <div class="qa__a"><div><p>Not to toot my own horn, but Nickolaos &ldquo;Nick&rdquo; Kontonicolaou and the Modern Spaces team are a great place to start. I'm based in Astoria and Ditmars and know these neighborhoods block by block, and I have the whole Modern Spaces team behind me. Whether you're renting, buying, selling or leasing out a property, anywhere in New York City, any and all of your needs will be met with me as your agent.</p></div></div>
             </div>
             <div class="qa">
-              <h3><button type="button" aria-expanded="false">Do you speak Greek, Ukrainian or Russian?<i aria-hidden="true"></i></button></h3>
-              <div class="qa__a"><div><p>Yes. I speak English, Greek, Ukrainian and Russian, and I'm happy to work with you in whichever you prefer, from the first call to the lease or contract.</p></div></div>
+              <h3><button type="button" aria-expanded="false">What languages do you speak?<i aria-hidden="true"></i></button></h3>
+              <div class="qa__a"><div><p>I speak English, Greek, Ukrainian and Russian, and I'm happy to work with you in whichever you prefer, from the first call to the lease or contract.</p></div></div>
             </div>
             <div class="qa">
               <h3><button type="button" aria-expanded="false">Do you only work in Astoria?<i aria-hidden="true"></i></button></h3>
@@ -516,13 +516,15 @@
             </ul>
           </div>
 
-          <!-- TODO: connect to a form service (e.g. Formspree) or CRM. It does not send yet. -->
-          <form class="form" data-form novalidate>
+          <!-- Sends to Formspree (account: nick@modernspaces.com) -->
+          <form class="form" data-form action="https://formspree.io/f/meagogvk" method="POST" novalidate>
+            <input type="hidden" name="_subject" value="New inquiry from nickkont.com" />
+            <input type="text" name="_gotcha" class="form__trap" tabindex="-1" autocomplete="off" aria-hidden="true" />
             <div class="seg" role="radiogroup" aria-label="I'm looking to">
-              <label><input type="radio" name="intent" value="rent" checked /><span>Rent</span></label>
-              <label><input type="radio" name="intent" value="buy" /><span>Buy</span></label>
-              <label><input type="radio" name="intent" value="sell" /><span>Sell</span></label>
-              <label><input type="radio" name="intent" value="lease" /><span>Lease out</span></label>
+              <label><input type="radio" name="looking_to" value="Rent" checked /><span>Rent</span></label>
+              <label><input type="radio" name="looking_to" value="Buy" /><span>Buy</span></label>
+              <label><input type="radio" name="looking_to" value="Sell" /><span>Sell</span></label>
+              <label><input type="radio" name="looking_to" value="Lease out" /><span>Lease out</span></label>
             </div>
             <div class="field"><input id="f-name" name="name" autocomplete="name" required placeholder=" " /><label for="f-name">Name</label></div>
             <div class="field"><input id="f-email" name="email" type="email" autocomplete="email" required placeholder=" " /><label for="f-email">Email</label></div>
@@ -530,6 +532,11 @@
             <div class="field"><textarea id="f-msg" name="message" rows="3" placeholder=" "></textarea><label for="f-msg">Budget, move date, must-haves</label></div>
             <button class="btn btn--solid btn--block" type="submit">Send to Nick <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
             <p class="form__note" role="status" aria-live="polite"></p>
+            <div class="form__done" hidden tabindex="-1">
+              <span class="form__check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5 10 17.5 19 7"/></svg></span>
+              <h3>Thanks, I got your message.</h3>
+              <p>I'll get back to you the same day. If it's urgent, call or text me at <a class="link" href="tel:+17187916703">(718) 791-6703</a>.</p>
+            </div>
           </form>
         </div>
       </section>
